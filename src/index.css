@@ -7,6 +7,10 @@
 /* Top Tier Tech Design System - Enterprise Technology Consulting */
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   :root {
     /* Core brand colors - Navy & Blue theme */
     --background: 220 30% 97%; /* #F6F8FC */
