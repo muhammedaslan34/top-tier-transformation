@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface ProcessStep {
   number: string;
@@ -46,6 +46,12 @@ export function ServicePageLayout({
   caseStudies,
   subServices,
 }: ServicePageLayoutProps) {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <div className="min-h-screen">
       <Header />
