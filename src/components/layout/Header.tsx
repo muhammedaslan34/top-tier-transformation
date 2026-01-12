@@ -14,7 +14,7 @@ const services = [
 ];
 
 const navItems = [
-  { label: "Services", href: "/#services" },
+  { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
 ];
 
