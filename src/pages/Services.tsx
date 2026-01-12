@@ -196,27 +196,94 @@ export default function Services() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4 lg:px-8">
+      <section className="py-24 bg-background relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(31,107,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(31,107,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        <motion.div
+          animate={{ y: [-20, 20, -20] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-0 left-1/4 w-72 h-72 rounded-full bg-primary/5 blur-3xl"
+        />
+        <motion.div
+          animate={{ y: [20, -20, 20] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-accent/5 blur-3xl"
+        />
+        
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center"
+            className="max-w-5xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Not Sure Which Service You Need?
-            </h2>
-            <p className="text-muted-foreground text-lg mb-8">
-              Our experts are here to help you identify the right solutions for your unique challenges.
-            </p>
-            <Link to="/contact">
-              <Button variant="hero" size="xl">
-                Schedule a Free Consultation
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
+            {/* Main CTA Card */}
+            <div className="relative bg-gradient-to-br from-card via-card to-primary/5 rounded-3xl p-8 md:p-12 shadow-card border border-primary/10 overflow-hidden group">
+              {/* Animated gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Decorative corner elements */}
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-primary rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+              <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+              
+              <div className="relative z-10">
+                <div className="text-center mb-8">
+                  {/* Icon/Badge */}
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-primary mb-6 shadow-glow"
+                  >
+                    <ArrowRight className="w-8 h-8 text-primary-foreground rotate-[-45deg]" />
+                  </motion.div>
+                  
+                  {/* Heading */}
+                  <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                    Not Sure Which Service You Need?
+                  </h2>
+                  
+                  {/* Description */}
+                  <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-8">
+                    Our experts are here to help you identify the right solutions for your unique challenges. 
+                    Get a free consultation and discover how we can transform your digital landscape.
+                  </p>
+                </div>
+                
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                  <Link to="/contact" className="w-full sm:w-auto">
+                    <Button variant="hero" size="xl" className="w-full sm:w-auto group/btn">
+                      Schedule a Free Consultation
+                      <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+                    </Button>
+                  </Link>
+                  <Link to="/services" className="w-full sm:w-auto">
+                    <Button variant="outline" size="xl" className="w-full sm:w-auto">
+                      Explore All Services
+                    </Button>
+                  </Link>
+                </div>
+                
+                {/* Trust Indicators */}
+                <div className="flex flex-wrap items-center justify-center gap-6 pt-8 border-t border-border/50">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                    <span>Free Consultation</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="w-2 h-2 rounded-full bg-accent animate-pulse" style={{ animationDelay: "0.5s" }} />
+                    <span>No Obligation</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" style={{ animationDelay: "1s" }} />
+                    <span>Expert Guidance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

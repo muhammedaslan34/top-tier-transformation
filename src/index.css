@@ -158,4 +158,66 @@
   .glass {
     @apply backdrop-blur-xl bg-white/10 border border-white/20;
   }
+
+  /* Phone Input Custom Styling */
+  .phone-input-custom {
+    @apply flex items-center h-12 rounded-lg border border-input bg-background;
+    @apply focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
+  }
+
+  .phone-input-custom .PhoneInputInput {
+    @apply flex-1 h-full px-3 bg-transparent text-foreground;
+    @apply focus:outline-none border-0;
+    @apply text-sm;
+  }
+
+  .phone-input-custom .PhoneInputCountry {
+    @apply mr-1.5 ml-3 flex items-center gap-1 relative pr-0.5;
+  }
+
+  .phone-input-custom .PhoneInputCountryIcon {
+    @apply w-6 h-4 rounded border border-border/50;
+  }
+
+  .phone-input-custom .PhoneInputCountrySelect {
+    @apply absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer z-10;
+  }
+
+  .phone-input-custom .PhoneInputCountrySelectArrow {
+    @apply opacity-100 text-muted-foreground;
+    @apply transition-all duration-200;
+    width: 8px;
+    height: 8px;
+    margin-left: 1px;
+    flex-shrink: 0;
+  }
+
+  .phone-input-custom .PhoneInputCountryIcon--border {
+    @apply border-border/50;
+  }
+
+  .phone-input-custom:hover .PhoneInputCountrySelectArrow {
+    @apply text-foreground;
+  }
+
+  .phone-input-custom .PhoneInputCountrySelect:focus ~ .PhoneInputCountrySelectArrow {
+    @apply text-foreground;
+  }
+
+  .phone-input-custom .PhoneInputCountryCode {
+    @apply hidden;
+  }
+
+  /* Phone Input Dropdown Styling */
+  .PhoneInputCountryOptions {
+    @apply bg-card border border-border rounded-lg shadow-lg mt-1 max-h-64 overflow-auto z-50;
+  }
+
+  .PhoneInputCountryOption {
+    @apply px-4 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer flex items-center gap-2;
+  }
+
+  .PhoneInputCountryOption--selected {
+    @apply bg-primary/10 text-primary;
+  }
 }

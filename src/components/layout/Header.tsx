@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import logoImage from "@/asesst/logo.png";
 
 const services = [
   { label: "Digital Transformation", href: "/services/digital-transformation" },
@@ -46,12 +47,11 @@ export function Header() {
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-display font-bold text-xl">T</span>
-            </div>
-            <span className="font-display font-bold text-xl text-primary-foreground">
-              Top Tier Tech
-            </span>
+            <img 
+              src={logoImage} 
+              alt="Top Tier Tech Logo" 
+              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -83,12 +83,8 @@ export function Header() {
                     className="absolute top-full left-0 mt-2 w-72 bg-card/95 backdrop-blur-lg border border-border/50 rounded-xl shadow-xl overflow-hidden"
                   >
                     <div className="py-2">
-                      <Link
-                        to="/services"
-                        className="block px-4 py-3 text-primary font-medium border-b border-border/50 hover:bg-primary/10 transition-colors duration-200"
-                      >
-                        All Services
-                      </Link>
+                     
+                        
                       {services.map((service) => (
                         <Link
                           key={service.label}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,32 +15,49 @@ import CloudComputing from "./pages/services/CloudComputing";
 import BeneficiaryExperience from "./pages/services/BeneficiaryExperience";
 import InnovationServices from "./pages/services/InnovationServices";
 import GovernanceRiskCompliance from "./pages/services/GovernanceRiskCompliance";
+import iconImage from "@/asesst/icon.png";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/digital-transformation" element={<DigitalTransformation />} />
-          <Route path="/services/data-governance" element={<DataGovernance />} />
-          <Route path="/services/cloud-computing" element={<CloudComputing />} />
-          <Route path="/services/beneficiary-experience" element={<BeneficiaryExperience />} />
-          <Route path="/services/innovation-services" element={<InnovationServices />} />
-          <Route path="/services/governance-risk-compliance" element={<GovernanceRiskCompliance />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Set favicon dynamically
+  useEffect(() => {
+    const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (link) {
+      link.href = iconImage;
+    } else {
+      const newLink = document.createElement("link");
+      newLink.rel = "icon";
+      newLink.type = "image/png";
+      newLink.href = iconImage;
+      document.head.appendChild(newLink);
+    }
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/digital-transformation" element={<DigitalTransformation />} />
+            <Route path="/services/data-governance" element={<DataGovernance />} />
+            <Route path="/services/cloud-computing" element={<CloudComputing />} />
+            <Route path="/services/beneficiary-experience" element={<BeneficiaryExperience />} />
+            <Route path="/services/innovation-services" element={<InnovationServices />} />
+            <Route path="/services/governance-risk-compliance" element={<GovernanceRiskCompliance />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

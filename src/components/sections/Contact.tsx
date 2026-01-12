@@ -11,8 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle2, ChevronDown, Search } from "lucide-react";
 import { toast } from "sonner";
+import PhoneInput, { type Value as PhoneValue, getCountries, getCountryCallingCode } from "react-phone-number-input";
+import en from "react-phone-number-input/locale/en.json";
+import "react-phone-number-input/style.css";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 const services = [
   "Digital Transformation",
@@ -23,10 +29,86 @@ const services = [
   "Governance, Risk & Compliance",
 ];
 
+// Custom Country Selector Component
+function CountrySelect({ value, onChange, labels: defaultLabels, ...rest }: any) {
+  const [open, setOpen] = useState(false);
+  const countries = getCountries();
+  const labels = defaultLabels || en;
+
+  const selectedCountry = value || "SA";
+  const selectedCountryCode = getCountryCallingCode(selectedCountry);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "flex items-center gap-1.5 relative pr-0.5 pl-3 h-full",
+            "focus:outline-none"
+          )}
+          aria-label="Select country"
+        >
+          <div className="w-6 h-4 rounded border border-border/50 overflow-hidden flex-shrink-0">
+            <img
+              src={`https://flagcdn.com/w20/${selectedCountry.toLowerCase()}.png`}
+              alt={labels[selectedCountry]}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          </div>
+          <ChevronDown className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[300px] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search country or code..." />
+          <CommandList>
+            <CommandEmpty>No country found.</CommandEmpty>
+            <CommandGroup>
+              {countries.map((country) => {
+                const countryCode = getCountryCallingCode(country);
+                const countryName = labels[country] || country;
+                return (
+                  <CommandItem
+                    key={country}
+                    value={`${countryName} ${countryCode} +${countryCode}`}
+                    onSelect={() => {
+                      onChange(country);
+                      setOpen(false);
+                    }}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <div className="w-6 h-4 rounded border border-border/50 overflow-hidden flex-shrink-0">
+                      <img
+                        src={`https://flagcdn.com/w20/${country.toLowerCase()}.png`}
+                        alt={countryName}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    </div>
+                    <span className="flex-1">{countryName}</span>
+                    <span className="text-sm text-muted-foreground">+{countryCode}</span>
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phoneValue, setPhoneValue] = useState<PhoneValue>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +122,7 @@ export function Contact() {
     });
     
     setIsSubmitting(false);
+    setPhoneValue(undefined);
     (e.target as HTMLFormElement).reset();
   };
 
@@ -95,9 +178,9 @@ export function Contact() {
 
             <div className="space-y-6">
               {[
-                { icon: Mail, label: "Email", value: "info@toptiertech.com" },
-                { icon: Phone, label: "Phone", value: "+1 (555) 123-4567" },
-                { icon: MapPin, label: "Address", value: "123 Innovation Drive, Tech City" },
+                { icon: Mail, label: "Email", value: "sales@toptiertech.com" },
+                { icon: Phone, label: "Phone", value: "+966544803552" },
+                { icon: MapPin, label: "Address", value: "12245 Riyadh.Al Sulaimaniyah Dist" },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -150,10 +233,9 @@ export function Contact() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Company *</label>
+                  <label className="text-sm font-medium text-foreground">Company Name</label>
                   <Input 
                     placeholder="Company name" 
-                    required 
                     className="h-12"
                   />
                 </div>
@@ -166,12 +248,20 @@ export function Contact() {
                     className="h-12"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Phone</label>
-                  <Input 
-                    type="tel" 
-                    placeholder="+1 (555) 000-0000" 
-                    className="h-12"
+                <div className="space-y-2 ">
+                  <label className="text-sm font-medium text-foreground">Phone *</label>
+                  <PhoneInput
+                    required 
+                    international
+                    defaultCountry="SA"
+                    value={phoneValue}
+                    onChange={setPhoneValue}
+                    placeholder="Enter phone number"
+                    className="phone-input-custom"
+                    countrySelectComponent={CountrySelect}
+                    numberInputProps={{
+                      className: "flex-1 h-full  px-3 bg-transparent text-foreground focus:outline-none border-0 text-sm"
+                    }}
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
