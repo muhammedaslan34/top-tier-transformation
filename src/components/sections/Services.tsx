@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Layers,
   Database,
@@ -15,50 +16,32 @@ import {
 const services = [
   {
     icon: Layers,
-    title: "Digital Transformation",
-    description:
-      "Benchmark studies, leadership training, and strategic planning to accelerate your digital journey.",
-    features: ["Benchmark Studies", "Leadership & Capacity Building", "Strategic Planning"],
+    key: "digitalTransformation",
     href: "/services/digital-transformation",
   },
   {
     icon: Database,
-    title: "Data Governance",
-    description:
-      "Ensure data quality, security, and access management across your organization.",
-    features: ["Data Quality", "Data Security", "Access Management"],
+    key: "dataGovernance",
     href: "/services/data-governance",
   },
   {
     icon: Cloud,
-    title: "Cloud Computing",
-    description:
-      "Infrastructure analysis, system selection, and seamless transition planning.",
-    features: ["Infrastructure Analysis", "System Selection", "Transition Planning"],
+    key: "cloudComputing",
     href: "/services/cloud-computing",
   },
   {
     icon: Users,
-    title: "Beneficiary Experience",
-    description:
-      "User journey analysis, UX measurement, and digital service optimization.",
-    features: ["Experience Study", "UX Measurement", "Maturity Enhancement"],
+    key: "beneficiaryExperience",
     href: "/services/beneficiary-experience",
   },
   {
     icon: Lightbulb,
-    title: "Innovation Services",
-    description:
-      "Institutional innovation, emerging technologies, and custom digital solutions.",
-    features: ["AI & Automation", "IoT & VR/AR", "Custom Solutions"],
+    key: "innovationServices",
     href: "/services/innovation-services",
   },
   {
     icon: ShieldCheck,
-    title: "Governance, Risk & Compliance",
-    description:
-      "Regulatory compliance, risk management, and IT governance frameworks.",
-    features: ["Compliance Management", "Risk Management", "IT Governance"],
+    key: "governanceRiskCompliance",
     href: "/services/governance-risk-compliance",
   },
 ];
@@ -83,6 +66,7 @@ const cardVariants = {
 };
 
 export function Services() {
+  const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -97,7 +81,7 @@ export function Services() {
             transition={{ duration: 0.5 }}
             className="text-primary font-semibold text-sm uppercase tracking-wider"
           >
-            Our Services
+            {t("services.title")}
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -105,8 +89,8 @@ export function Services() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-4 mb-6"
           >
-            Comprehensive Solutions for{" "}
-            <span className="text-gradient">Digital Success</span>
+            {t("services.heading")}{" "}
+            <span className="text-gradient">{t("services.headingHighlight")}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -114,8 +98,7 @@ export function Services() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-muted-foreground text-lg"
           >
-            From strategy to implementation, we provide end-to-end services to help you 
-            navigate your digital transformation journey with confidence.
+            {t("services.description")}
           </motion.p>
         </div>
 
@@ -140,15 +123,15 @@ export function Services() {
 
               {/* Content */}
               <h3 className="font-display text-xl font-bold text-foreground mb-3">
-                {service.title}
+                {t(`services.${service.key}.title`)}
               </h3>
-              <p className="text-muted-foreground mb-6">{service.description}</p>
+              <p className="text-muted-foreground mb-6">{t(`services.${service.key}.description`)}</p>
 
               {/* Features */}
               <ul className="space-y-2 mb-6 flex-grow">
-                {service.features.map((feature) => (
+                {t(`services.${service.key}.features`, { returnObjects: true }).map((feature: string, idx: number) => (
                   <li
-                    key={feature}
+                    key={idx}
                     className="flex items-center gap-2 text-sm text-foreground/80"
                   >
                     <div className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -162,7 +145,7 @@ export function Services() {
                 to={service.href}
                 className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300 mt-auto"
               >
-                Learn More
+                {t("common.learnMore")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>

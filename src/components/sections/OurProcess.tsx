@@ -1,35 +1,17 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Clock, Search, Lightbulb, Rocket, TrendingUp } from "lucide-react";
 
 const steps = [
-  {
-    number: "01",
-    title: "Discovery & Assessment",
-    description: "We analyze your current state, challenges, and opportunities to create a comprehensive roadmap.",
-    icon: Search,
-  },
-  {
-    number: "02",
-    title: "Strategy Development",
-    description: "Our experts design a tailored strategy aligned with your business goals and industry best practices.",
-    icon: Lightbulb,
-  },
-  {
-    number: "03",
-    title: "Implementation",
-    description: "We execute the plan with precision, ensuring minimal disruption to your operations.",
-    icon: Rocket,
-  },
-  {
-    number: "04",
-    title: "Optimization & Support",
-    description: "Continuous improvement and support to maximize value and adapt to changing needs.",
-    icon: TrendingUp,
-  },
+  { number: "01", key: "discovery", icon: Search },
+  { number: "02", key: "strategy", icon: Lightbulb },
+  { number: "03", key: "implementation", icon: Rocket },
+  { number: "04", key: "optimization", icon: TrendingUp },
 ];
 
 export const OurProcess = () => {
+  const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -51,13 +33,13 @@ export const OurProcess = () => {
         >
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
             <Clock className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Our Process</span>
+            <span className="text-sm font-medium text-primary">{t("ourProcess.title")}</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            How We Work
+            {t("ourProcess.heading")}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our proven methodology ensures successful outcomes at every stage
+            {t("ourProcess.description")}
           </p>
         </motion.div>
 
@@ -84,19 +66,19 @@ export const OurProcess = () => {
                   style={{ marginTop: index === 0 ? 0 : undefined }}
                 >
                   {/* Card */}
-                  <div className={`md:w-5/12 ${isLeft ? "md:pr-8" : "md:pl-8"}`}>
-                    <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 relative group">
+                  <div className={`md:w-5/12 ${isLeft ? "md:pr-8" : "md:pl-8"} flex`}>
+                    <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 relative group w-full min-h-[180px] flex flex-col">
                       {/* Number badge */}
                       <div className="absolute -top-3 right-6 bg-gradient-to-r from-primary to-accent text-primary-foreground px-4 py-1.5 rounded-lg font-bold text-sm shadow-lg">
                         {step.number}
                       </div>
 
-                      <div className="pt-4">
+                      <div className="pt-4 flex-1 flex flex-col">
                         <h3 className="text-xl font-bold text-foreground mb-3">
-                          {step.title}
+                          {t(`ourProcess.${step.key}.title`)}
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed">
-                          {step.description}
+                        <p className="text-muted-foreground leading-relaxed flex-1">
+                          {t(`ourProcess.${step.key}.description`)}
                         </p>
                       </div>
 

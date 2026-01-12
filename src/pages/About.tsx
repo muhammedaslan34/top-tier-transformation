@@ -3,36 +3,21 @@ import { Footer } from "@/components/layout/Footer";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Target, Users, Shield, TrendingUp, Award, Globe, Lightbulb, Heart } from "lucide-react";
 
 const values = [
-  {
-    icon: Target,
-    title: "Excellence",
-    description: "We strive for the highest quality in every project we undertake.",
-  },
-  {
-    icon: Users,
-    title: "Collaboration",
-    description: "Working together with clients as true partners in transformation.",
-  },
-  {
-    icon: Shield,
-    title: "Integrity",
-    description: "Honest, transparent relationships built on trust and accountability.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Innovation",
-    description: "Embracing new technologies and creative solutions to solve challenges.",
-  },
+  { icon: Target, key: "excellence" },
+  { icon: Users, key: "collaboration" },
+  { icon: Shield, key: "integrity" },
+  { icon: Lightbulb, key: "innovation" },
 ];
 
 const stats = [
-  { value: "100+", label: "Projects Delivered" },
-  { value: "50+", label: "Enterprise Clients" },
-  { value: "95%", label: "Client Satisfaction" },
-  { value: "15+", label: "Years Experience" },
+  { value: "100+", key: "projectsDelivered" },
+  { value: "50+", key: "enterpriseClients" },
+  { value: "95%", key: "clientSatisfaction" },
+  { value: "15+", key: "yearsExperience" },
 ];
 
 const team = [
@@ -51,6 +36,7 @@ const team = [
 ];
 
 export default function About() {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -71,7 +57,7 @@ export default function About() {
             transition={{ duration: 0.5 }}
             className="text-accent font-semibold text-sm uppercase tracking-wider"
           >
-            About Us
+            {t("about.title")}
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -79,8 +65,8 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-4 mb-6"
           >
-            Your Partner in{" "}
-            <span className="text-gradient">Digital Excellence</span>
+            {t("about.heading")}{" "}
+            <span className="text-gradient">{t("about.headingHighlight")}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -88,8 +74,7 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-white/80 text-lg max-w-2xl mx-auto"
           >
-            Top Tier Tech is a digital transformation and technology consulting firm 
-            helping organizations modernize operations and build sustainable digital ecosystems.
+            {t("about.description")}
           </motion.p>
         </div>
       </section>
@@ -110,7 +95,7 @@ export default function About() {
                 <div className="font-display text-4xl md:text-5xl font-bold text-gradient mb-2 group-hover:scale-105 transition-transform duration-300">
                   {stat.value}
                 </div>
-                <p className="text-muted-foreground font-medium">{stat.label}</p>
+                <p className="text-muted-foreground font-medium">{t(`about.stats.${stat.key}`)}</p>
               </motion.div>
             ))}
           </div>
@@ -128,21 +113,17 @@ export default function About() {
               transition={{ duration: 0.6 }}
             >
               <span className="text-primary font-semibold text-sm uppercase tracking-wider">
-                Our Mission
+                {t("about.mission.title")}
               </span>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-4 mb-6">
-                Empowering Organizations Through{" "}
-                <span className="text-gradient">Technology</span>
+                {t("about.mission.heading")}{" "}
+                <span className="text-gradient">{t("about.mission.headingHighlight")}</span>
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                We believe that every organization deserves access to world-class technology 
-                solutions. Our mission is to bridge the gap between complex technology and 
-                business objectives, delivering transformative results that drive growth and efficiency.
+                {t("about.mission.description1")}
               </p>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Through deep expertise, innovation, and governance, we help our clients 
-                navigate the digital landscape with confidence, building secure and scalable 
-                solutions that stand the test of time.
+                {t("about.mission.description2")}
               </p>
             </motion.div>
             
@@ -159,22 +140,22 @@ export default function About() {
                     <Globe className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl font-bold text-foreground">Global Reach</h3>
-                    <p className="text-muted-foreground">Serving clients worldwide</p>
+                    <h3 className="font-display text-xl font-bold text-foreground">{t("about.mission.globalReach")}</h3>
+                    <p className="text-muted-foreground">{t("about.mission.globalReachDesc")}</p>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Award className="w-5 h-5 text-primary" />
-                    <span className="text-foreground">Industry-recognized certifications</span>
+                    <span className="text-foreground">{t("about.mission.certifications")}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Heart className="w-5 h-5 text-primary" />
-                    <span className="text-foreground">Client-centric approach</span>
+                    <span className="text-foreground">{t("about.mission.clientCentric")}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <TrendingUp className="w-5 h-5 text-primary" />
-                    <span className="text-foreground">Proven track record of success</span>
+                    <span className="text-foreground">{t("about.mission.provenTrackRecord")}</span>
                   </div>
                 </div>
               </div>
@@ -194,17 +175,17 @@ export default function About() {
             className="text-center mb-16"
           >
             <span className="text-primary font-semibold text-sm uppercase tracking-wider">
-              Our Values
+              {t("about.values.title")}
             </span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-4">
-              What <span className="text-gradient">Drives Us</span>
+              {t("about.values.heading")} <span className="text-gradient">{t("about.values.headingHighlight")}</span>
             </h2>
           </motion.div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <motion.div
-                key={value.title}
+                key={value.key}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -215,9 +196,9 @@ export default function About() {
                   <value.icon className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="font-display text-lg font-bold text-foreground mb-2">
-                  {value.title}
+                  {t(`about.values.${value.key}`)}
                 </h3>
-                <p className="text-muted-foreground text-sm">{value.description}</p>
+                <p className="text-muted-foreground text-sm">{t(`about.values.${value.key}Desc`)}</p>
               </motion.div>
             ))}
           </div>

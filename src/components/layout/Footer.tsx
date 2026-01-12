@@ -1,26 +1,27 @@
 import { Linkedin, Twitter, Mail } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import logoImage from "@/asesst/tttech.png";
+import { useTranslation } from "react-i18next";
+import logoImage from "@/asesst/logo.png";
 
 const footerLinks = {
   services: [
-    { label: "Digital Transformation", href: "/services/digital-transformation" },
-    { label: "Data Governance", href: "/services/data-governance" },
-    { label: "Cloud Computing", href: "/services/cloud-computing" },
-    { label: "Beneficiary Experience", href: "/services/beneficiary-experience" },
-    { label: "Innovation Services", href: "/services/innovation-services" },
-    { label: "Governance, Risk & Compliance", href: "/services/governance-risk-compliance" },
+    { key: "digitalTransformation", href: "/services/digital-transformation" },
+    { key: "dataGovernance", href: "/services/data-governance" },
+    { key: "cloudComputing", href: "/services/cloud-computing" },
+    { key: "beneficiaryExperience", href: "/services/beneficiary-experience" },
+    { key: "innovationServices", href: "/services/innovation-services" },
+    { key: "governanceRiskCompliance", href: "/services/governance-risk-compliance" },
   ],
   company: [
-    { label: "About Us", href: "/about" },
-    { label: "Why Choose Us", href: "/#why-us" },
-    { label: "Services", href: "/services" },
-    { label: "Contact", href: "/contact" },
+    { key: "aboutUs", href: "/about" },
+    { key: "whyChooseUs", href: "/#why-us" },
+    { key: "services", href: "/services" },
+    { key: "contact", href: "/contact" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
+    { key: "privacyPolicy", href: "/privacy" },
+    { key: "termsOfService", href: "/terms" },
+    { key: "cookiePolicy", href: "/cookies" },
   ],
 };
 
@@ -31,6 +32,7 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,15 +65,11 @@ export function Footer() {
               <img 
                 src={logoImage} 
                 alt="Top Tier Tech Logo" 
-                className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
+                className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
               />
-              <span className="font-display font-bold text-xl text-secondary-foreground">
-                Top Tier Tech
-              </span>
             </Link>
             <p className="text-secondary-foreground/70 max-w-sm mb-6">
-              Engineering Digital Excellence. Your trusted partner for digital 
-              transformation and technology consulting.
+              {t("footer.description")}
             </p>
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => {
@@ -105,15 +103,15 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Services</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">{t("footer.services")}</h4>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
-                <li key={link.label}>
+                <li key={link.key}>
                   <Link
                     to={link.href}
                     className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200"
                   >
-                    {link.label}
+                    {t(`services.${link.key}.title`)}
                   </Link>
                 </li>
               ))}
@@ -122,30 +120,30 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Company</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">{t("footer.company")}</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => {
                 // Handle hash links for homepage sections
                 if (link.href.startsWith("/#")) {
                   return (
-                    <li key={link.label}>
+                    <li key={link.key}>
                       <a
                         href={link.href}
                         onClick={(e) => handleHashLink(e, link.href)}
                         className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200 cursor-pointer"
                       >
-                        {link.label}
+                        {t(`footer.${link.key}`)}
                       </a>
                     </li>
                   );
                 }
                 return (
-                  <li key={link.label}>
+                  <li key={link.key}>
                     <Link
                       to={link.href}
                       className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200"
                     >
-                      {link.label}
+                      {t(`footer.${link.key}`)}
                     </Link>
                   </li>
                 );
@@ -155,15 +153,15 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Legal</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">{t("footer.legal")}</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
-                <li key={link.label}>
+                <li key={link.key}>
                   <Link
                     to={link.href}
                     className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200"
                   >
-                    {link.label}
+                    {t(`footer.${link.key}`)}
                   </Link>
                 </li>
               ))}
@@ -174,11 +172,11 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-16 pt-8 border-t border-secondary-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-secondary-foreground/50 text-sm">
-            © {new Date().getFullYear()} Top Tier Tech. All rights reserved.
+            {t("footer.copyright", { year: new Date().getFullYear() })}
           </p>
-          <p className="text-secondary-foreground/50 text-sm">
+          {/* <p className="text-secondary-foreground/50 text-sm">
             Engineering Digital Excellence
-          </p>
+          </p> */}
         </div>
       </div>
     </footer>

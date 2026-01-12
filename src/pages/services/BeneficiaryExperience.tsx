@@ -1,4 +1,5 @@
 import { ServicePageLayout } from "@/components/layout/ServicePageLayout";
+import { useTranslation } from "react-i18next";
 import { 
   Users, 
   Search, 
@@ -11,108 +12,37 @@ import {
   Target
 } from "lucide-react";
 
-const subServices = [
-  {
-    title: "Experience Study",
-    description: "Comprehensive user journey analysis to understand pain points, needs, and opportunities for improvement.",
-  },
-  {
-    title: "UX Measurement",
-    description: "Behavior tracking and analytics frameworks to quantify user experience and satisfaction.",
-  },
-  {
-    title: "Maturity Enhancement",
-    description: "Digital service optimization programs that elevate your beneficiary experience capabilities.",
-  },
-];
-
-const processSteps = [
-  {
-    number: "01",
-    title: "Journey Mapping",
-    description: "Document and analyze every touchpoint in your beneficiary's experience journey.",
-  },
-  {
-    number: "02",
-    title: "Pain Point Analysis",
-    description: "Identify friction points, gaps, and opportunities for experience improvement.",
-  },
-  {
-    number: "03",
-    title: "Solution Design",
-    description: "Create user-centered designs that address identified needs and enhance satisfaction.",
-  },
-  {
-    number: "04",
-    title: "Continuous Improvement",
-    description: "Implement feedback loops and analytics for ongoing experience optimization.",
-  },
-];
-
-const features = [
-  {
-    icon: <Heart className="w-6 h-6 text-primary" />,
-    title: "Human-Centered Design",
-    description: "Every solution is designed with the beneficiary's needs, preferences, and context in mind.",
-  },
-  {
-    icon: <Smartphone className="w-6 h-6 text-primary" />,
-    title: "Omnichannel Excellence",
-    description: "Seamless experiences across all channels—web, mobile, in-person, and beyond.",
-  },
-  {
-    icon: <BarChart3 className="w-6 h-6 text-primary" />,
-    title: "Data-Driven Insights",
-    description: "Analytics and metrics that reveal exactly how beneficiaries interact with your services.",
-  },
-  {
-    icon: <MessageCircle className="w-6 h-6 text-primary" />,
-    title: "Feedback Integration",
-    description: "Systems that capture, analyze, and act on beneficiary feedback in real-time.",
-  },
-  {
-    icon: <Smile className="w-6 h-6 text-primary" />,
-    title: "Satisfaction Focus",
-    description: "Measurable improvements in beneficiary satisfaction and service adoption rates.",
-  },
-  {
-    icon: <Target className="w-6 h-6 text-primary" />,
-    title: "Accessibility First",
-    description: "Inclusive design ensuring all beneficiaries can access and use your services.",
-  },
-];
-
-const caseStudies = [
-  {
-    industry: "Government",
-    title: "Citizen Services Portal",
-    result: "Redesigned citizen portal reducing average task completion time and support calls.",
-    metric: "92% Satisfaction Rate",
-  },
-  {
-    industry: "Healthcare",
-    title: "Patient Experience Transformation",
-    result: "Created seamless patient journey from scheduling through post-visit follow-up.",
-    metric: "4.8/5 Patient Rating",
-  },
-  {
-    industry: "Social Services",
-    title: "Benefits Application Redesign",
-    result: "Simplified benefits application process increasing completion rates dramatically.",
-    metric: "70% Higher Completion",
-  },
-];
-
 export default function BeneficiaryExperience() {
+  const { t } = useTranslation();
+  
+  const subServices = t("serviceDetails.beneficiaryExperience.subServices", { returnObjects: true }) as Array<{title: string, description: string}>;
+  const processSteps = t("serviceDetails.beneficiaryExperience.processSteps", { returnObjects: true }) as Array<{title: string, description: string}>;
+  const features = t("serviceDetails.beneficiaryExperience.features", { returnObjects: true }) as Array<{title: string, description: string}>;
+  const caseStudies = t("serviceDetails.beneficiaryExperience.caseStudies", { returnObjects: true }) as Array<{industry: string, title: string, result: string, metric: string}>;
+
+  const featuresWithIcons = [
+    { ...features[0], icon: <Heart className="w-6 h-6 text-primary" /> },
+    { ...features[1], icon: <Smartphone className="w-6 h-6 text-primary" /> },
+    { ...features[2], icon: <BarChart3 className="w-6 h-6 text-primary" /> },
+    { ...features[3], icon: <MessageCircle className="w-6 h-6 text-primary" /> },
+    { ...features[4], icon: <Smile className="w-6 h-6 text-primary" /> },
+    { ...features[5], icon: <Target className="w-6 h-6 text-primary" /> },
+  ];
+
+  const processStepsWithNumbers = processSteps.map((step, index) => ({
+    ...step,
+    number: String(index + 1).padStart(2, "0"),
+  }));
+
   return (
     <ServicePageLayout
-      serviceName="Beneficiary Experience"
-      tagline="Create meaningful experiences that build trust and satisfaction"
-      description="We help organizations understand and optimize every interaction with their beneficiaries, creating seamless, intuitive experiences that drive engagement and satisfaction."
+      serviceName={t("serviceDetails.beneficiaryExperience.serviceName")}
+      tagline={t("serviceDetails.beneficiaryExperience.tagline")}
+      description={t("serviceDetails.beneficiaryExperience.description")}
       heroIcon={<Users className="w-10 h-10 text-primary-foreground" />}
       subServices={subServices}
-      processSteps={processSteps}
-      features={features}
+      processSteps={processStepsWithNumbers}
+      features={featuresWithIcons}
       caseStudies={caseStudies}
     />
   );

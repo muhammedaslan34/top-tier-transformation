@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -127,6 +128,59 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
   }
+
+  /* Arabic Font Support - Tajawal */
+  [dir="rtl"] body {
+    font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6,
+  [dir="rtl"] .font-display {
+    font-family: 'Tajawal', 'Space Grotesk', system-ui, sans-serif;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.01em;
+  }
+
+  /* Better line heights for Arabic */
+  [dir="rtl"] h1 {
+    line-height: 1.3 !important;
+  }
+
+  [dir="rtl"] h2 {
+    line-height: 1.35 !important;
+  }
+
+  [dir="rtl"] p {
+    line-height: 1.7 !important;
+  }
+
+  /* Mobile-specific optimizations */
+  @media (max-width: 640px) {
+    [dir="rtl"] h1 {
+      line-height: 1.3 !important;
+      letter-spacing: -0.005em;
+    }
+    
+    [dir="rtl"] h2 {
+      line-height: 1.35 !important;
+    }
+    
+    [dir="rtl"] p {
+      line-height: 1.7 !important;
+    }
+  }
 }
 
 @layer utilities {
@@ -157,6 +211,26 @@
 
   .glass {
     @apply backdrop-blur-xl bg-white/10 border border-white/20;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="ltr"] {
+    direction: ltr;
+  }
+
+  /* RTL-specific adjustments */
+  [dir="rtl"] .ml-auto {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  [dir="rtl"] .mr-auto {
+    margin-right: 0;
+    margin-left: auto;
   }
 
   /* Phone Input Custom Styling */

@@ -3,26 +3,40 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import logoImage from "@/asesst/logo.png";
 
 const services = [
-  { label: "Digital Transformation", href: "/services/digital-transformation" },
-  { label: "Data Governance", href: "/services/data-governance" },
-  { label: "Cloud Computing", href: "/services/cloud-computing" },
-  { label: "Beneficiary Experience", href: "/services/beneficiary-experience" },
-  { label: "Innovation Services", href: "/services/innovation-services" },
-  { label: "Governance, Risk & Compliance", href: "/services/governance-risk-compliance" },
+  { key: "digitalTransformation", href: "/services/digital-transformation" },
+  { key: "dataGovernance", href: "/services/data-governance" },
+  { key: "cloudComputing", href: "/services/cloud-computing" },
+  { key: "beneficiaryExperience", href: "/services/beneficiary-experience" },
+  { key: "innovationServices", href: "/services/innovation-services" },
+  { key: "governanceRiskCompliance", href: "/services/governance-risk-compliance" },
 ];
 
 const navItems = [
-  { label: "About", href: "/about" },
+  { key: "about", href: "/about" },
 ];
 
 export function Header() {
+  const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
+
+  const currentLang = i18n.language;
+  const languages = [
+    { code: "en", name: "English", flag: "🇬🇧", flagCode: "gb" },
+    { code: "ar", name: "العربية", flag: "🇸🇦", flagCode: "sa" },
+  ];
+  
+  const currentLanguage = languages.find(l => l.code === currentLang) || languages[0];
+
+  const changeLanguage = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,92 +51,148 @@ export function Header() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-secondary/95 backdrop-blur-lg shadow-lg"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent"
     >
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-4 lg:px-8 mt-4">
         <nav className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img 
-              src={logoImage} 
-              alt="Top Tier Tech Logo" 
-              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
-            />
-          </Link>
-
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {/* Services Dropdown */}
-            <div
-              className="relative"
-              onMouseEnter={() => setIsServicesOpen(true)}
-              onMouseLeave={() => setIsServicesOpen(false)}
-            >
-              <Link 
-                to="/services"
-                className="flex items-center gap-1 text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
-              >
-                Services
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
-                />
-              </Link>
-
-              <AnimatePresence>
-                {isServicesOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 w-72 bg-card/95 backdrop-blur-lg border border-border/50 rounded-xl shadow-xl overflow-hidden"
+          <section className="hidden md:block w-full">
+            <div className={`transition-all duration-300 rounded-lg px-6 py-3 ${
+              isScrolled
+                ? "bg-secondary/80 backdrop-blur-sm"
+                : "bg-transparent"
+            }`}>
+              <div className="flex items-center justify-between">
+                {/* Logo */}
+                <Link to="/" className="flex items-center gap-2 group">
+                  <img 
+                    src={logoImage} 
+                    alt="Top Tier Tech Logo" 
+                    className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
+                  />
+                </Link>
+                
+                {/* Navigation Items */}
+                <div className="flex items-center gap-4">
+                  {/* Services Dropdown */}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setIsServicesOpen(true)}
+                    onMouseLeave={() => setIsServicesOpen(false)}
                   >
-                    <div className="py-2">
-                     
-                        
-                      {services.map((service) => (
-                        <Link
-                          key={service.label}
-                          to={service.href}
-                          className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-primary/10 transition-colors duration-200"
+                    <Link 
+                      to="/services"
+                      className="flex items-center gap-1 text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
+                    >
+                      {t("header.services")}
+                      <ChevronDown
+                        size={16}
+                        className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
+                      />
+                    </Link>
+
+                    <AnimatePresence>
+                      {isServicesOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-full left-0 mt-2 w-72 bg-card/95 backdrop-blur-lg border border-border/50 rounded-xl shadow-xl overflow-hidden"
                         >
-                          {service.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                          <div className="py-2">
+                            {services.map((service) => (
+                              <Link
+                                key={service.key}
+                                to={service.href}
+                                className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-primary/10 transition-colors duration-200"
+                              >
+                                {t(`services.${service.key}.title`)}
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.key}
+                      to={item.href}
+                      className="text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
+                    >
+                      {t(`header.${item.key}`)}
+                    </Link>
+                  ))}
+                  
+                  {/* Language Switcher - Flag Button */}
+                  <button
+                    onClick={() => {
+                      const nextLang = languages.find(l => l.code !== currentLang) || languages[0];
+                      changeLanguage(nextLang.code);
+                    }}
+                    className="flex items-center justify-center p-1.5 hover:bg-primary-foreground/10 transition-all duration-200 hover:scale-110"
+                    aria-label={`Switch to ${languages.find(l => l.code !== currentLang)?.name || "other language"}`}
+                    title={`Switch to ${languages.find(l => l.code !== currentLang)?.name || "other language"}`}
+                  >
+                    {/* Show only the opposite language flag */}
+                    {(() => {
+                      const oppositeLang = languages.find(l => l.code !== currentLang) || languages[0];
+                      return (
+                        <div className="w-7 h-5 overflow-hidden flex-shrink-0 rounded-[2px]">
+                          <img
+                            src={`https://flagcdn.com/w160/${oppositeLang.flagCode}.png`}
+                            alt={oppositeLang.name}
+                            className="w-full h-full object-cover"
+                            style={{ imageRendering: "crisp-edges" as any }}
+                            onError={(e) => {
+                              // Fallback to emoji if image fails
+                              (e.target as HTMLImageElement).style.display = "none";
+                              const parent = (e.target as HTMLImageElement).parentElement;
+                              if (parent && !parent.querySelector(".flag-emoji")) {
+                                const emoji = document.createElement("span");
+                                emoji.className = "flag-emoji text-lg";
+                                emoji.textContent = oppositeLang.flag;
+                                parent.appendChild(emoji);
+                              }
+                            }}
+                          />
+                        </div>
+                      );
+                    })()}
+                  </button>
+
+                  <Link to="/contact">
+                    <Button variant="hero" size="default">
+                      {t("common.requestConsultation")}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
+          </section>
 
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className="text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link to="/contact">
-              <Button variant="hero" size="default">
-                Request Consultation
-              </Button>
+          {/* Mobile Logo and Menu Button */}
+          <div className={`md:hidden flex items-center justify-between w-full transition-all duration-300 rounded-lg px-4 py-3 ${
+            isScrolled
+              ? "bg-secondary/80 backdrop-blur-sm"
+              : "bg-transparent"
+          }`}>
+            <Link to="/" className="flex items-center gap-2 group">
+              <img 
+                src={logoImage} 
+                alt="Top Tier Tech Logo" 
+                className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
+              />
             </Link>
+            <button
+              className="text-primary-foreground p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-primary-foreground p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </nav>
 
         {/* Mobile Menu */}
@@ -142,7 +212,7 @@ export function Header() {
                     className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Services
+                    {t("header.services")}
                   </Link>
                   <button
                     onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
@@ -166,12 +236,12 @@ export function Header() {
                       <div className="pl-4 py-2 space-y-2">
                         {services.map((service) => (
                           <Link
-                            key={service.label}
+                            key={service.key}
                             to={service.href}
                             className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-1 transition-colors"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            {service.label}
+                            {t(`services.${service.key}.title`)}
                           </Link>
                         ))}
                       </div>
@@ -182,17 +252,60 @@ export function Header() {
 
               {navItems.map((item) => (
                 <Link
-                  key={item.label}
+                  key={item.key}
                   to={item.href}
                   className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.label}
+                  {t(`header.${item.key}`)}
                 </Link>
               ))}
+              
+              {/* Mobile Language Switcher */}
+              <div className="pt-2 border-t border-primary-foreground/10 mt-2">
+                <button
+                  onClick={() => {
+                    const nextLang = languages.find(l => l.code !== currentLang) || languages[0];
+                    changeLanguage(nextLang.code);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 hover:bg-primary-foreground/10 transition-all duration-200"
+                  aria-label={`Switch to ${languages.find(l => l.code !== currentLang)?.name || "other language"}`}
+                >
+                  {(() => {
+                    const oppositeLang = languages.find(l => l.code !== currentLang) || languages[0];
+                    return (
+                      <>
+                        <div className="w-7 h-5 overflow-hidden flex-shrink-0 rounded-[2px]">
+                          <img
+                            src={`https://flagcdn.com/w160/${oppositeLang.flagCode}.png`}
+                            alt={oppositeLang.name}
+                            className="w-full h-full object-cover"
+                            style={{ imageRendering: "high-quality" as any }}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                              const parent = (e.target as HTMLImageElement).parentElement;
+                              if (parent && !parent.querySelector(".flag-emoji")) {
+                                const emoji = document.createElement("span");
+                                emoji.className = "flag-emoji text-lg";
+                                emoji.textContent = oppositeLang.flag;
+                                parent.appendChild(emoji);
+                              }
+                            }}
+                          />
+                        </div>
+                        <span className="text-primary-foreground/80 font-medium">
+                          {t("common.language", "Language")}: {oppositeLang.name}
+                        </span>
+                      </>
+                    );
+                  })()}
+                </button>
+              </div>
+
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="hero" size="default" className="w-full mt-2">
-                  Request Consultation
+                  {t("common.requestConsultation")}
                 </Button>
               </Link>
             </div>

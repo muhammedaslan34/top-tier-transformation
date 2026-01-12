@@ -2,24 +2,24 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Target, Users, Shield, TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
 const features = [{
   icon: Target,
-  title: "Strategy-First",
-  description: "We align technology with your business objectives"
+  key: "strategyFirst"
 }, {
   icon: Users,
-  title: "Expert Team",
-  description: "Seasoned consultants with enterprise experience"
+  key: "expertTeam"
 }, {
   icon: Shield,
-  title: "Security Focus",
-  description: "Built-in security at every layer of solutions"
+  key: "securityFocus"
 }, {
   icon: TrendingUp,
-  title: "Measurable Impact",
-  description: "Clear KPIs and tangible business outcomes"
+  key: "measurableImpact"
 }];
+
 export function WhoWeAre() {
+  const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, {
     once: true,
@@ -39,22 +39,19 @@ export function WhoWeAre() {
           duration: 0.7
         }}>
             <span className="text-primary font-semibold text-sm uppercase tracking-wider">
-              Who We Are
+              {t("whoWeAre.title")}
             </span>
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-4 mb-6">
-              Your Partner in{" "}
-              <span className="text-gradient">Digital Excellence</span>
+              {t("whoWeAre.heading")}{" "}
+              <span className="text-gradient">{t("whoWeAre.headingHighlight")}</span>
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              Top Tier Tech is a digital transformation and technology consulting firm 
-              specializing in helping organizations modernize operations, enhance service 
-              delivery, and build sustainable digital ecosystems. We combine deep expertise, 
-              innovation, and governance to deliver secure and scalable solutions.
+              {t("whoWeAre.description")}
             </p>
 
             {/* Feature Grid */}
             <div className="grid grid-cols-2 gap-6">
-              {features.map((feature, index) => <motion.div key={feature.title} initial={{
+              {features.map((feature, index) => <motion.div key={feature.key} initial={{
               opacity: 0,
               y: 20
             }} animate={isInView ? {
@@ -68,8 +65,8 @@ export function WhoWeAre() {
                     <feature.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground">{feature.title}</h4>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    <h4 className="font-semibold text-foreground">{t(`whoWeAre.${feature.key}`)}</h4>
+                    <p className="text-sm text-muted-foreground">{t(`whoWeAre.${feature.key}Desc`)}</p>
                   </div>
                 </motion.div>)}
             </div>
@@ -97,7 +94,7 @@ export function WhoWeAre() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="font-display text-6xl font-bold text-gradient mb-2">100+</div>
-                    <p className="text-muted-foreground font-medium">Projects Delivered</p>
+                    <p className="text-muted-foreground font-medium">{t("whoWeAre.projectsDelivered")}</p>
                   </div>
                 </div>
               </div>
@@ -115,8 +112,8 @@ export function WhoWeAre() {
                     <Shield className="w-5 h-5 text-accent" />
                   </div>
                   <div>
-                    <div className="font-semibold text-foreground">Enterprise</div>
-                    <div className="text-sm text-muted-foreground">Grade Security</div>
+                    <div className="font-semibold text-foreground">{t("whoWeAre.enterpriseGrade")}</div>
+                    <div className="text-sm text-muted-foreground">{t("whoWeAre.gradeSecurity")}</div>
                   </div>
                 </div>
               </motion.div>
@@ -134,7 +131,7 @@ export function WhoWeAre() {
                   </div>
                   <div>
                     <div className="font-semibold text-foreground">95%</div>
-                    <div className="text-sm text-muted-foreground">Client Satisfaction</div>
+                    <div className="text-sm text-muted-foreground">{t("whoWeAre.clientSatisfaction")}</div>
                   </div>
                 </div>
               </motion.div>

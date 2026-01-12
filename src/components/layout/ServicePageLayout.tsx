@@ -151,7 +151,7 @@ export function ServicePageLayout({
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="mt-8"
               >
-                <Link to="/#contact">
+                <Link to="/contact">
                   <Button variant="hero" size="xl">
                     Get Started
                     <ArrowRight className="w-5 h-5" />
@@ -230,10 +230,10 @@ export function ServicePageLayout({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.15 }}
-                    className="relative"
+                    className="relative flex"
                   >
-                    <div className="bg-card rounded-2xl p-6 shadow-card relative z-10">
-                      <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center mb-4">
+                    <div className="bg-card rounded-2xl p-6 shadow-card relative z-10 w-full min-h-[200px] flex flex-col">
+                      <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center mb-4 flex-shrink-0">
                         <span className="text-primary-foreground font-display font-bold text-lg">
                           {step.number}
                         </span>
@@ -241,7 +241,7 @@ export function ServicePageLayout({
                       <h3 className="font-display text-lg font-bold text-foreground mb-2">
                         {step.title}
                       </h3>
-                      <p className="text-muted-foreground text-sm">{step.description}</p>
+                      <p className="text-muted-foreground text-sm flex-1">{step.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -251,7 +251,7 @@ export function ServicePageLayout({
         </section>
 
         {/* Features Section */}
-        <section className="py-20 bg-background">
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -293,51 +293,7 @@ export function ServicePageLayout({
           </div>
         </section>
 
-        {/* Case Studies Section */}
-        <section className="py-20 bg-secondary text-secondary-foreground">
-          <div className="container mx-auto px-4 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
-              <span className="text-accent font-semibold text-sm uppercase tracking-wider">
-                Success Stories
-              </span>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-secondary-foreground mt-4">
-                Real <span className="text-gradient">Results</span> for Real Clients
-              </h2>
-            </motion.div>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              {caseStudies.map((study, index) => (
-                <motion.div
-                  key={study.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-navy-light/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/20"
-                >
-                  <span className="text-accent text-sm font-medium uppercase tracking-wider">
-                    {study.industry}
-                  </span>
-                  <h3 className="font-display text-xl font-bold text-secondary-foreground mt-3 mb-4">
-                    {study.title}
-                  </h3>
-                  <p className="text-secondary-foreground/70 mb-6">{study.result}</p>
-                  <div className="pt-4 border-t border-secondary-foreground/10">
-                    <span className="font-display text-3xl font-bold text-gradient">
-                      {study.metric}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+       
 
         {/* CTA Section */}
         <section className="py-24 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden">
@@ -403,7 +359,7 @@ export function ServicePageLayout({
                   
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-                    <Link to="/#contact" className="w-full sm:w-auto">
+                    <Link to="/contact" className="w-full sm:w-auto">
                       <Button variant="hero" size="xl" className="w-full sm:w-auto group/btn">
                         Schedule a Consultation
                         <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />

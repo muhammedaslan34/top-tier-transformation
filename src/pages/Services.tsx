@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { 
   Layers, 
   Database, 
@@ -17,51 +18,33 @@ import { Button } from "@/components/ui/button";
 const services = [
   {
     icon: Layers,
-    title: "Digital Transformation",
-    description:
-      "Benchmark studies, leadership capacity building, and strategic planning for organizational change. We help you navigate the complexities of digital evolution.",
+    key: "digitalTransformation",
     href: "/services/digital-transformation",
-    subServices: ["Benchmark Studies", "Leadership & Capacity Building", "Strategic Planning"],
   },
   {
     icon: Database,
-    title: "Data Governance",
-    description:
-      "Comprehensive data quality, security, and access management solutions for enterprise data assets. Ensure your data is accurate, secure, and accessible.",
+    key: "dataGovernance",
     href: "/services/data-governance",
-    subServices: ["Data Quality", "Data Security", "Access Management"],
   },
   {
     icon: Cloud,
-    title: "Cloud Computing",
-    description:
-      "Infrastructure analysis, system selection, and seamless transition planning to the cloud. Modernize your infrastructure for agility and scale.",
+    key: "cloudComputing",
     href: "/services/cloud-computing",
-    subServices: ["Infrastructure Analysis", "System Selection", "Transition Planning"],
   },
   {
     icon: Users,
-    title: "Beneficiary Experience",
-    description:
-      "Experience studies, UX measurement, and maturity enhancement for customer-centric organizations. Put your users at the center of everything you do.",
+    key: "beneficiaryExperience",
     href: "/services/beneficiary-experience",
-    subServices: ["Experience Study", "UX Measurement", "Maturity Enhancement"],
   },
   {
     icon: Lightbulb,
-    title: "Innovation Services",
-    description:
-      "Institutional innovation, emerging technologies (AI, IoT, VR/AR), and innovative solution design. Stay ahead of the curve with cutting-edge solutions.",
+    key: "innovationServices",
     href: "/services/innovation-services",
-    subServices: ["Institutional Innovation", "Emerging Technologies", "Innovative Solutions Design"],
   },
   {
     icon: ShieldCheck,
-    title: "Governance, Risk & Compliance",
-    description:
-      "Comprehensive compliance management, risk assessment, and IT governance frameworks. Protect your organization while enabling growth.",
+    key: "governanceRiskCompliance",
     href: "/services/governance-risk-compliance",
-    subServices: ["Compliance Management", "Risk Management", "IT Governance"],
   },
 ];
 
@@ -85,6 +68,7 @@ const cardVariants = {
 };
 
 export default function Services() {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -105,7 +89,7 @@ export default function Services() {
             transition={{ duration: 0.5 }}
             className="text-accent font-semibold text-sm uppercase tracking-wider"
           >
-            Our Services
+            {t("servicesPage.title")}
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -113,8 +97,8 @@ export default function Services() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-4 mb-6"
           >
-            Comprehensive Solutions for{" "}
-            <span className="text-gradient">Digital Success</span>
+            {t("servicesPage.heading")}{" "}
+            <span className="text-gradient">{t("servicesPage.headingHighlight")}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -122,8 +106,7 @@ export default function Services() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-white/80 text-lg max-w-2xl mx-auto"
           >
-            From strategy to implementation, we provide end-to-end services to help you 
-            navigate your digital transformation journey with confidence.
+            {t("servicesPage.description")}
           </motion.p>
         </div>
       </section>
@@ -140,7 +123,7 @@ export default function Services() {
           >
             {services.map((service, index) => (
               <motion.div
-                key={service.title}
+                key={service.key}
                 variants={cardVariants}
                 className="group relative"
               >
@@ -156,24 +139,24 @@ export default function Services() {
 
                     {/* Title */}
                     <h3 className="font-display text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
-                      {service.title}
+                      {t(`services.${service.key}.title`)}
                     </h3>
 
                     {/* Description */}
                     <p className="text-muted-foreground mb-6 leading-relaxed">
-                      {service.description}
+                      {t(`services.${service.key}.description`)}
                     </p>
 
                     {/* Sub-services Tags */}
                     <div className="flex flex-wrap gap-2 mb-6 flex-grow">
-                      {service.subServices.map((sub) => (
+                      {Array.isArray(t(`services.${service.key}.features`, { returnObjects: true })) ? (t(`services.${service.key}.features`, { returnObjects: true }) as string[]).map((sub: string, idx: number) => (
                         <span
-                          key={sub}
+                          key={idx}
                           className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20"
                         >
                           {sub}
                         </span>
-                      ))}
+                      )) : null}
                     </div>
 
                     {/* Link */}
@@ -181,7 +164,7 @@ export default function Services() {
                       to={service.href}
                       className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300 mt-auto"
                     >
-                      Learn more
+                      {t("common.learnMore")}
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </div>
@@ -242,13 +225,12 @@ export default function Services() {
                   
                   {/* Heading */}
                   <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                    Not Sure Which Service You Need?
+                    {t("servicesPage.notSure")}
                   </h2>
                   
                   {/* Description */}
                   <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-8">
-                    Our experts are here to help you identify the right solutions for your unique challenges. 
-                    Get a free consultation and discover how we can transform your digital landscape.
+                    {t("servicesPage.notSureDesc")}
                   </p>
                 </div>
                 
@@ -256,30 +238,26 @@ export default function Services() {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                   <Link to="/contact" className="w-full sm:w-auto">
                     <Button variant="hero" size="xl" className="w-full sm:w-auto group/btn">
-                      Schedule a Free Consultation
+                      {t("servicesPage.scheduleConsultation")}
                       <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
                     </Button>
                   </Link>
-                  <Link to="/services" className="w-full sm:w-auto">
-                    <Button variant="outline" size="xl" className="w-full sm:w-auto">
-                      Explore All Services
-                    </Button>
-                  </Link>
+                  
                 </div>
                 
                 {/* Trust Indicators */}
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8 border-t border-border/50">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    <span>Free Consultation</span>
+                    <span>{t("servicesPage.freeConsultation")}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-2 h-2 rounded-full bg-accent animate-pulse" style={{ animationDelay: "0.5s" }} />
-                    <span>No Obligation</span>
+                    <span>{t("servicesPage.noObligation")}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-2 h-2 rounded-full bg-primary animate-pulse" style={{ animationDelay: "1s" }} />
-                    <span>Expert Guidance</span>
+                    <span>{t("servicesPage.expertGuidance")}</span>
                   </div>
                 </div>
               </div>
