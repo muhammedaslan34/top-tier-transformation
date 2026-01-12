@@ -15,8 +15,6 @@ const services = [
 
 const navItems = [
   { label: "About", href: "#about" },
-  { label: "Why Us", href: "#why-us" },
-  { label: "Contact", href: "#contact" },
 ];
 
 export function Header() {
@@ -106,9 +104,11 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <Button variant="hero" size="default">
-              Request Consultation
-            </Button>
+            <Link to="/contact">
+              <Button variant="hero" size="default">
+                Request Consultation
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -177,9 +177,11 @@ export function Header() {
                   {item.label}
                 </a>
               ))}
-              <Button variant="hero" size="default" className="w-full mt-2">
-                Request Consultation
-              </Button>
+              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="hero" size="default" className="w-full mt-2">
+                  Request Consultation
+                </Button>
+              </Link>
             </div>
           </motion.div>
         )}
