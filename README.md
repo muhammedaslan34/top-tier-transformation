@@ -1,73 +1,103 @@
-# Welcome to your Lovable project
+# Top Tier Tech - Digital Transformation & Technology Consulting
 
-## Project info
+A modern, bilingual (English/Arabic) website for Top Tier Tech, featuring digital transformation and technology consulting services.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- 🌐 **Bilingual Support**: Full English and Arabic translations with RTL layout support
+- 📱 **Responsive Design**: Optimized for all devices (mobile, tablet, desktop)
+- 🎨 **Modern UI**: Built with shadcn-ui components and Tailwind CSS
+- ⚡ **Fast Performance**: Built with Vite for optimal performance
+- 🔄 **Smooth Animations**: Framer Motion for engaging user interactions
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** - Next generation frontend tooling
+- **TypeScript** - Type-safe JavaScript
+- **React** - UI library
+- **React Router** - Client-side routing
+- **shadcn-ui** - Beautiful UI components
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Animation library
+- **i18next** - Internationalization framework
+- **React i18next** - React bindings for i18next
 
-## How can I deploy this project?
+## Getting Started
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Prerequisites
 
-## Can I connect a custom domain to my Lovable project?
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-Yes, you can!
+### Installation
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```sh
+# Step 1: Clone the repository
+git clone <YOUR_GIT_URL>
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+# Step 2: Navigate to the project directory
+cd top-tier-transformation
+
+# Step 3: Install dependencies
+npm install
+
+# Step 4: Start the development server
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Project Structure
+
+```
+src/
+├── components/        # React components
+│   ├── layout/       # Header, Footer, etc.
+│   ├── sections/     # Page sections (Hero, Services, etc.)
+│   └── ui/           # shadcn-ui components
+├── pages/            # Page components
+│   └── services/     # Service detail pages
+├── i18n/            # Internationalization
+│   ├── config.ts    # i18next configuration
+│   └── locales/     # Translation files (en.json, ar.json)
+├── hooks/           # Custom React hooks
+└── lib/             # Utility functions
+```
+
+## Internationalization
+
+The website supports two languages:
+- **English (en)** - Default language
+- **Arabic (ar)** - With full RTL support
+
+Language preference is saved in localStorage and persists across sessions.
+
+## Deployment
+
+### Build for Production
+
+```sh
+npm run build
+```
+
+This creates an optimized production build in the `dist/` folder.
+
+### Deploy Options
+
+- **Vercel**: Connect your Git repository or upload the `dist` folder
+- **Netlify**: Connect your Git repository or drag & drop the `dist` folder
+- **GitHub Pages**: Deploy the `dist` folder to the `gh-pages` branch
+- **Any Static Hosting**: Upload the contents of the `dist` folder
+
+## License
+
+© 2024 Top Tier Tech. All rights reserved.
