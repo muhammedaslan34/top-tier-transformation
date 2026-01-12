@@ -131,7 +131,7 @@ export function Services() {
             <motion.div
               key={service.title}
               variants={cardVariants}
-              className="group bg-card rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1"
+              className="group bg-card rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
             >
               {/* Icon */}
               <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -145,7 +145,7 @@ export function Services() {
               <p className="text-muted-foreground mb-6">{service.description}</p>
 
               {/* Features */}
-              <ul className="space-y-2 mb-6">
+              <ul className="space-y-2 mb-6 flex-grow">
                 {service.features.map((feature) => (
                   <li
                     key={feature}
@@ -160,7 +160,7 @@ export function Services() {
               {/* Link */}
               <Link
                 to={service.href}
-                className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300"
+                className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300 mt-auto"
               >
                 Learn More
                 <ArrowRight className="w-4 h-4" />
