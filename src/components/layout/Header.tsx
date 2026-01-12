@@ -14,7 +14,6 @@ const services = [
 ];
 
 const navItems = [
-  { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
 ];
 
@@ -63,13 +62,16 @@ export function Header() {
               onMouseEnter={() => setIsServicesOpen(true)}
               onMouseLeave={() => setIsServicesOpen(false)}
             >
-              <button className="flex items-center gap-1 text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200">
+              <Link 
+                to="/services"
+                className="flex items-center gap-1 text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
+              >
                 Services
                 <ChevronDown
                   size={16}
                   className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
                 />
-              </button>
+              </Link>
 
               <AnimatePresence>
                 {isServicesOpen && (
@@ -81,6 +83,12 @@ export function Header() {
                     className="absolute top-full left-0 mt-2 w-72 bg-card/95 backdrop-blur-lg border border-border/50 rounded-xl shadow-xl overflow-hidden"
                   >
                     <div className="py-2">
+                      <Link
+                        to="/services"
+                        className="block px-4 py-3 text-primary font-medium border-b border-border/50 hover:bg-primary/10 transition-colors duration-200"
+                      >
+                        All Services
+                      </Link>
                       {services.map((service) => (
                         <Link
                           key={service.label}
@@ -132,16 +140,24 @@ export function Header() {
             <div className="flex flex-col gap-2 px-4">
               {/* Mobile Services Accordion */}
               <div>
-                <button
-                  onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
-                  className="flex items-center justify-between w-full text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
-                >
-                  Services
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform duration-200 ${isMobileServicesOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
+                <div className="flex items-center justify-between">
+                  <Link
+                    to="/services"
+                    className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Services
+                  </Link>
+                  <button
+                    onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
+                    className="text-primary-foreground/80 hover:text-primary-foreground p-2 transition-colors"
+                  >
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform duration-200 ${isMobileServicesOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                </div>
                 <AnimatePresence>
                   {isMobileServicesOpen && (
                     <motion.div
