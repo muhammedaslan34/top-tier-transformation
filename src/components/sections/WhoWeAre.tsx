@@ -2,45 +2,42 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Target, Users, Shield, TrendingUp } from "lucide-react";
-
-const features = [
-  {
-    icon: Target,
-    title: "Strategy-First",
-    description: "We align technology with your business objectives",
-  },
-  {
-    icon: Users,
-    title: "Expert Team",
-    description: "Seasoned consultants with enterprise experience",
-  },
-  {
-    icon: Shield,
-    title: "Security Focus",
-    description: "Built-in security at every layer of solutions",
-  },
-  {
-    icon: TrendingUp,
-    title: "Measurable Impact",
-    description: "Clear KPIs and tangible business outcomes",
-  },
-];
-
+const features = [{
+  icon: Target,
+  title: "Strategy-First",
+  description: "We align technology with your business objectives"
+}, {
+  icon: Users,
+  title: "Expert Team",
+  description: "Seasoned consultants with enterprise experience"
+}, {
+  icon: Shield,
+  title: "Security Focus",
+  description: "Built-in security at every layer of solutions"
+}, {
+  icon: TrendingUp,
+  title: "Measurable Impact",
+  description: "Clear KPIs and tangible business outcomes"
+}];
 export function WhoWeAre() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <section id="about" className="py-24 bg-background">
+  const isInView = useInView(ref, {
+    once: true,
+    margin: "-100px"
+  });
+  return <section id="about" className="py-24 bg-background rounded-lg">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7 }}
-          >
+          <motion.div ref={ref} initial={{
+          opacity: 0,
+          x: -50
+        }} animate={isInView ? {
+          opacity: 1,
+          x: 0
+        } : {}} transition={{
+          duration: 0.7
+        }}>
             <span className="text-primary font-semibold text-sm uppercase tracking-wider">
               Who We Are
             </span>
@@ -57,14 +54,16 @@ export function WhoWeAre() {
 
             {/* Feature Grid */}
             <div className="grid grid-cols-2 gap-6">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                  className="flex items-start gap-3"
-                >
+              {features.map((feature, index) => <motion.div key={feature.title} initial={{
+              opacity: 0,
+              y: 20
+            }} animate={isInView ? {
+              opacity: 1,
+              y: 0
+            } : {}} transition={{
+              duration: 0.5,
+              delay: 0.2 + index * 0.1
+            }} className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <feature.icon className="w-5 h-5 text-primary" />
                   </div>
@@ -72,18 +71,21 @@ export function WhoWeAre() {
                     <h4 className="font-semibold text-foreground">{feature.title}</h4>
                     <p className="text-sm text-muted-foreground">{feature.description}</p>
                   </div>
-                </motion.div>
-              ))}
+                </motion.div>)}
             </div>
           </motion.div>
 
           {/* Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          x: 50
+        }} animate={isInView ? {
+          opacity: 1,
+          x: 0
+        } : {}} transition={{
+          duration: 0.7,
+          delay: 0.2
+        }} className="relative">
             <div className="relative aspect-square max-w-lg mx-auto">
               {/* Background decoration */}
               <div className="absolute inset-0 bg-gradient-primary rounded-3xl opacity-10" />
@@ -101,11 +103,13 @@ export function WhoWeAre() {
               </div>
               
               {/* Floating cards */}
-              <motion.div
-                animate={{ y: [-10, 10, -10] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -right-4 top-1/4 bg-card p-4 rounded-xl shadow-card-hover"
-              >
+              <motion.div animate={{
+              y: [-10, 10, -10]
+            }} transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }} className="absolute -right-4 top-1/4 bg-card p-4 rounded-xl shadow-card-hover">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
                     <Shield className="w-5 h-5 text-accent" />
@@ -117,11 +121,13 @@ export function WhoWeAre() {
                 </div>
               </motion.div>
               
-              <motion.div
-                animate={{ y: [10, -10, 10] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -left-4 bottom-1/4 bg-card p-4 rounded-xl shadow-card-hover"
-              >
+              <motion.div animate={{
+              y: [10, -10, 10]
+            }} transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }} className="absolute -left-4 bottom-1/4 bg-card p-4 rounded-xl shadow-card-hover">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                     <TrendingUp className="w-5 h-5 text-primary" />
@@ -136,6 +142,5 @@ export function WhoWeAre() {
           </motion.div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
