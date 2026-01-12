@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   Layers,
   Database,
@@ -18,6 +19,7 @@ const services = [
     description:
       "Benchmark studies, leadership training, and strategic planning to accelerate your digital journey.",
     features: ["Benchmark Studies", "Leadership & Capacity Building", "Strategic Planning"],
+    href: "/services/digital-transformation",
   },
   {
     icon: Database,
@@ -25,6 +27,7 @@ const services = [
     description:
       "Ensure data quality, security, and access management across your organization.",
     features: ["Data Quality", "Data Security", "Access Management"],
+    href: "/services/data-governance",
   },
   {
     icon: Cloud,
@@ -32,6 +35,7 @@ const services = [
     description:
       "Infrastructure analysis, system selection, and seamless transition planning.",
     features: ["Infrastructure Analysis", "System Selection", "Transition Planning"],
+    href: "/services/cloud-computing",
   },
   {
     icon: Users,
@@ -39,6 +43,7 @@ const services = [
     description:
       "User journey analysis, UX measurement, and digital service optimization.",
     features: ["Experience Study", "UX Measurement", "Maturity Enhancement"],
+    href: "/services/beneficiary-experience",
   },
   {
     icon: Lightbulb,
@@ -46,6 +51,7 @@ const services = [
     description:
       "Institutional innovation, emerging technologies, and custom digital solutions.",
     features: ["AI & Automation", "IoT & VR/AR", "Custom Solutions"],
+    href: "/services/innovation-services",
   },
   {
     icon: ShieldCheck,
@@ -53,6 +59,7 @@ const services = [
     description:
       "Regulatory compliance, risk management, and IT governance frameworks.",
     features: ["Compliance Management", "Risk Management", "IT Governance"],
+    href: "/services/governance-risk-compliance",
   },
 ];
 
@@ -151,13 +158,13 @@ export function Services() {
               </ul>
 
               {/* Link */}
-              <a
-                href="#contact"
+              <Link
+                to={service.href}
                 className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300"
               >
                 Learn More
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
