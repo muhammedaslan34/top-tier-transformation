@@ -14,7 +14,8 @@ const services = [
 ];
 
 const navItems = [
-  { label: "About", href: "/#about" },
+  { label: "Services", href: "/#services" },
+  { label: "About", href: "/about" },
 ];
 
 export function Header() {
