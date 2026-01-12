@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const services = [
   { label: "Digital Transformation", href: "/services/digital-transformation" },
@@ -14,7 +14,7 @@ const services = [
 ];
 
 const navItems = [
-  { label: "About", href: "#about" },
+  { label: "About", href: "/#about" },
 ];
 
 export function Header() {
@@ -96,13 +96,13 @@ export function Header() {
             </div>
 
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 className="text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             <Link to="/contact">
               <Button variant="hero" size="default">
@@ -168,14 +168,14 @@ export function Header() {
               </div>
 
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  to={item.href}
                   className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="hero" size="default" className="w-full mt-2">
