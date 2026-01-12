@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
+import Services from "./pages/Services";
 import DigitalTransformation from "./pages/services/DigitalTransformation";
 import DataGovernance from "./pages/services/DataGovernance";
 import CloudComputing from "./pages/services/CloudComputing";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/services/digital-transformation" element={<DigitalTransformation />} />
           <Route path="/services/data-governance" element={<DataGovernance />} />
           <Route path="/services/cloud-computing" element={<CloudComputing />} />
