@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -63,6 +64,28 @@ export async function POST(request: NextRequest) {
     };
 
     const serviceName = serviceNames[serviceInterest] || serviceInterest;
+
+    // Save submission to database (do this before email to ensure it's saved)
+    let submissionId: string | null = null;
+    try {
+      const submission = await prisma.contactSubmission.create({
+        data: {
+          name,
+          companyName: companyName || null,
+          email,
+          phone,
+          serviceInterest,
+          message,
+          isRead: false,
+          status: "new",
+        },
+      });
+      submissionId = submission.id;
+      console.log("Submission saved to database:", submissionId);
+    } catch (dbError) {
+      console.error("Failed to save submission to database:", dbError);
+      // Continue with email even if DB save fails
+    }
 
     // Helper function to escape HTML to prevent XSS
     const escapeHtml = (text: string): string => {
@@ -184,7 +207,7 @@ export async function POST(request: NextRequest) {
 
       console.log("Email sent successfully:", { messageId: data?.id });
       return NextResponse.json(
-        { success: true, messageId: data?.id },
+        { success: true, messageId: data?.id, submissionId },
         { 
           status: 200,
           headers: {
@@ -196,6 +219,24 @@ export async function POST(request: NextRequest) {
       console.error("Resend send error:", resendError);
       const errorMessage = resendError instanceof Error ? resendError.message : "Failed to send email";
       const errorStack = resendError instanceof Error ? resendError.stack : "Unknown error";
+      
+      // Return success if submission was saved, even if email failed
+      if (submissionId) {
+        return NextResponse.json(
+          { 
+            success: true,
+            warning: "Submission saved but email failed to send",
+            submissionId,
+            emailError: errorMessage
+          },
+          { 
+            status: 200,
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }
+        );
+      }
       
       return NextResponse.json(
         { 
