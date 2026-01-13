@@ -1,7 +1,9 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import {
   Layers,
@@ -112,7 +114,7 @@ export function Services() {
         >
           {services.map((service) => (
             <motion.div
-              key={service.title}
+              key={service.key}
               variants={cardVariants}
               className="group bg-card rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
             >
@@ -142,7 +144,7 @@ export function Services() {
 
               {/* Link */}
               <Link
-                to={service.href}
+                href={service.href}
                 className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300 mt-auto"
               >
                 {t("common.learnMore")}

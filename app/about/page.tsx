@@ -1,7 +1,8 @@
+"use client";
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Target, Users, Shield, TrendingUp, Award, Globe, Lightbulb, Heart } from "lucide-react";
@@ -37,11 +38,10 @@ const team = [
 
 export default function About() {
   const { t } = useTranslation();
-  const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,7 +85,7 @@ export default function About() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={stat.key}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -204,8 +204,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-   
 
       <Footer />
     </div>

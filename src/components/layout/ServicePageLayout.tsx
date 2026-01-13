@@ -1,10 +1,13 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { ReactNode, useEffect } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronRight, Home } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -54,7 +57,7 @@ export function ServicePageLayout({
   caseStudies,
   subServices,
 }: ServicePageLayoutProps) {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,7 +84,7 @@ export function ServicePageLayout({
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link to="/" className="text-primary-foreground/70 hover:text-primary-foreground flex items-center gap-1">
+                    <Link href="/" className="text-primary-foreground/70 hover:text-primary-foreground flex items-center gap-1">
                       <Home className="w-4 h-4" />
                       Home
                     </Link>
@@ -92,7 +95,7 @@ export function ServicePageLayout({
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link to="/#services" className="text-primary-foreground/70 hover:text-primary-foreground">
+                    <Link href="/#services" className="text-primary-foreground/70 hover:text-primary-foreground">
                       Services
                     </Link>
                   </BreadcrumbLink>
@@ -151,7 +154,7 @@ export function ServicePageLayout({
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="mt-8"
               >
-                <Link to="/contact">
+                <Link href="/contact">
                   <Button variant="hero" size="xl">
                     Get Started
                     <ArrowRight className="w-5 h-5" />
@@ -359,13 +362,13 @@ export function ServicePageLayout({
                   
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-                    <Link to="/contact" className="w-full sm:w-auto">
+                    <Link href="/contact" className="w-full sm:w-auto">
                       <Button variant="hero" size="xl" className="w-full sm:w-auto group/btn">
                         Schedule a Consultation
                         <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
                       </Button>
                     </Link>
-                    <Link to="/services" className="w-full sm:w-auto">
+                    <Link href="/services" className="w-full sm:w-auto">
                       <Button variant="outline" size="xl" className="w-full sm:w-auto">
                         Explore All Services
                       </Button>

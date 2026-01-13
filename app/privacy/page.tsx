@@ -1,27 +1,19 @@
+"use client";
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, FileText, Cookie } from "lucide-react";
 
-export default function Legal() {
-  const { pathname } = useLocation();
+export default function Privacy() {
   const [activeTab, setActiveTab] = useState("privacy");
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    // Determine which tab to show based on URL
-    if (pathname === "/privacy") {
-      setActiveTab("privacy");
-    } else if (pathname === "/terms") {
-      setActiveTab("terms");
-    } else if (pathname === "/cookies") {
-      setActiveTab("cookies");
-    }
-  }, [pathname]);
+    setActiveTab("privacy");
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

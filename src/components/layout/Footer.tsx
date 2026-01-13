@@ -1,5 +1,8 @@
+"use client";
+
 import { Linkedin, Twitter, Mail } from "lucide-react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import logoImage from "@/asesst/logo.png";
 
@@ -33,15 +36,15 @@ const socialLinks = [
 
 export function Footer() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleHashLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const hash = href.split("#")[1];
     
     // If we're already on the homepage, just scroll to the section
-    if (location.pathname === "/") {
+    if (pathname === "/") {
       const element = document.getElementById(hash);
       if (element) {
         // Small delay to ensure smooth scroll
@@ -50,8 +53,8 @@ export function Footer() {
         }, 50);
       }
     } else {
-      // Navigate to homepage with hash - Index component will handle scrolling
-      navigate(`/#${hash}`);
+      // Navigate to homepage with hash - Home component will handle scrolling
+      router.push(`/#${hash}`);
     }
   };
 
@@ -61,9 +64,9 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-6 group">
+            <Link href="/" className="flex items-center gap-2 mb-6 group">
               <img 
-                src={logoImage} 
+                src={logoImage.src} 
                 alt="Top Tier Tech Logo" 
                 className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
               />
@@ -90,7 +93,7 @@ export function Footer() {
                 return (
                   <Link
                     key={social.label}
-                    to={social.href}
+                    href={social.href}
                     aria-label={social.label}
                     className="w-10 h-10 rounded-lg bg-secondary-foreground/10 flex items-center justify-center hover:bg-primary transition-colors duration-200"
                   >
@@ -108,7 +111,7 @@ export function Footer() {
               {footerLinks.services.map((link) => (
                 <li key={link.key}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200"
                   >
                     {t(`services.${link.key}.title`)}
@@ -140,7 +143,7 @@ export function Footer() {
                 return (
                   <li key={link.key}>
                     <Link
-                      to={link.href}
+                      href={link.href}
                       className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200"
                     >
                       {t(`footer.${link.key}`)}
@@ -158,7 +161,7 @@ export function Footer() {
               {footerLinks.legal.map((link) => (
                 <li key={link.key}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-secondary-foreground/70 hover:text-secondary-foreground transition-colors duration-200"
                   >
                     {t(`footer.${link.key}`)}
