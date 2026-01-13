@@ -1,3 +1,5 @@
+"use client";
+
 import { ServicePageLayout } from "@/components/layout/ServicePageLayout";
 import { useTranslation } from "react-i18next";
 import { 

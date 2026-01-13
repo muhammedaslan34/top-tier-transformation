@@ -1,7 +1,9 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 export function Hero() {
@@ -87,13 +89,13 @@ export function Hero() {
           duration: 0.7,
           delay: 0.3
         }} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 px-4 sm:px-0">
-            <Link to="/contact" className="w-full sm:w-auto">
+            <Link href="/contact" className="w-full sm:w-auto">
               <Button variant="hero" size="lg" className="group w-full sm:w-auto">
                 {t("hero.requestConsultation")}
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link to="/services" className="w-full sm:w-auto">
+            <Link href="/services" className="w-full sm:w-auto">
               <Button variant="heroOutline" size="lg" className="w-full sm:w-auto">
                 {t("hero.exploreServices")}
               </Button>

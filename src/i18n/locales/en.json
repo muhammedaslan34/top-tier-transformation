@@ -152,18 +152,25 @@
     "form": {
       "name": "Name *",
       "namePlaceholder": "Your full name",
+      "nameRequired": "Name is required",
       "companyName": "Company Name",
       "companyNamePlaceholder": "Company name",
       "email": "Email *",
       "emailPlaceholder": "your@email.com",
+      "emailRequired": "Email is required",
+      "invalidEmail": "Invalid email address",
       "phone": "Phone *",
       "phonePlaceholder": "Enter phone number",
+      "phoneRequired": "Phone number is required",
       "serviceInterest": "Service Interest *",
       "servicePlaceholder": "Select a service",
+      "serviceRequired": "Service interest is required",
       "message": "Message *",
       "messagePlaceholder": "Tell us about your project or inquiry...",
+      "messageRequired": "Message is required",
       "success": "Thank you! We'll be in touch within 24 hours.",
-      "successDescription": "Our team will review your inquiry and respond promptly."
+      "successDescription": "Our team will review your inquiry and respond promptly.",
+      "error": "Failed to send message. Please try again."
     }
   },
   "about": {

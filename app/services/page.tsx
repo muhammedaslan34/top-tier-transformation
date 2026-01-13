@@ -1,9 +1,11 @@
+"use client";
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 import { 
   Layers, 
   Database, 
@@ -69,11 +71,10 @@ const cardVariants = {
 
 export default function Services() {
   const { t } = useTranslation();
-  const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -161,7 +162,7 @@ export default function Services() {
 
                     {/* Link */}
                     <Link
-                      to={service.href}
+                      href={service.href}
                       className="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all duration-300 mt-auto"
                     >
                       {t("common.learnMore")}
@@ -236,7 +237,7 @@ export default function Services() {
                 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-                  <Link to="/contact" className="w-full sm:w-auto">
+                  <Link href="/contact" className="w-full sm:w-auto">
                     <Button variant="hero" size="xl" className="w-full sm:w-auto group/btn">
                       {t("servicesPage.scheduleConsultation")}
                       <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />

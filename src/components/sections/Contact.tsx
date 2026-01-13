@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -105,27 +106,141 @@ function CountrySelect({ value, onChange, labels: defaultLabels, ...rest }: any)
   );
 }
 
+interface ContactFormData {
+  name: string;
+  companyName: string;
+  email: string;
+  phone: string;
+  serviceInterest: string;
+  message: string;
+}
+
 export function Contact() {
   const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneValue, setPhoneValue] = useState<PhoneValue>();
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors },
+    reset,
+    control,
+  } = useForm<ContactFormData>({
+    defaultValues: {
+      name: "",
+      companyName: "",
+      email: "",
+      phone: "",
+      serviceInterest: "",
+      message: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: ContactFormData) => {
+    setSubmitAttempted(true);
+    
+    if (!phoneValue) {
+      toast.error(t("contact.form.phoneRequired") || "Phone number is required");
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast.success(t("contact.form.success"), {
-      description: t("contact.form.successDescription"),
-    });
-    
-    setIsSubmitting(false);
-    setPhoneValue(undefined);
-    (e.target as HTMLFormElement).reset();
+
+    try {
+      const requestBody = {
+        name: data.name,
+        companyName: data.companyName || "",
+        email: data.email,
+        phone: phoneValue,
+        serviceInterest: data.serviceInterest,
+        message: data.message,
+      };
+
+      console.log("Sending contact form request:", { ...requestBody, message: "[message hidden]" });
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      console.log("Response status:", response.status, response.statusText);
+
+      // Get response text first (can only read body once)
+      const responseText = await response.text();
+      console.log("Response text:", responseText);
+
+      // Parse the response
+      let result: any = {};
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("Failed to parse response as JSON:", parseError);
+          // If not JSON, treat as error
+          result = { error: responseText || `HTTP ${response.status}: ${response.statusText}` };
+        }
+      } else {
+        // Empty response
+        if (response.ok) {
+          result = { success: true };
+        } else {
+          result = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+      }
+
+      // Check if response is ok
+      if (!response.ok) {
+        console.error("API Error:", {
+          status: response.status,
+          statusText: response.statusText,
+          result,
+        });
+
+        // Extract error message from result
+        let errorMessage = "Failed to send message";
+        if (result && typeof result === 'object') {
+          errorMessage = result.error || result.message || errorMessage;
+        } else if (typeof result === 'string') {
+          errorMessage = result;
+        }
+        
+        const errorDetails = result?.details ? ` (${result.details})` : "";
+        throw new Error(`${errorMessage}${errorDetails}`);
+      }
+
+      // Check if result indicates success
+      if (result.success || result.messageId) {
+        toast.success(t("contact.form.success"), {
+          description: t("contact.form.successDescription"),
+        });
+      } else {
+        throw new Error(result.error || "Unexpected response from server");
+      }
+
+      // Reset form
+      reset();
+      setPhoneValue(undefined);
+      setPhoneTouched(false);
+      setSubmitAttempted(false);
+    } catch (error) {
+      console.error("Contact form error:", error);
+      toast.error(
+        t("contact.form.error") || "Failed to send message. Please try again.",
+        {
+          description: error instanceof Error ? error.message : undefined,
+        }
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -221,21 +336,25 @@ export function Contact() {
             className="lg:col-span-3"
           >
             <form 
-              onSubmit={handleSubmit}
+              onSubmit={handleFormSubmit(onSubmit)}
               className="bg-card rounded-2xl p-8 shadow-card"
             >
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">{t("contact.form.name")}</label>
                   <Input 
+                    {...register("name", { required: true })}
                     placeholder={t("contact.form.namePlaceholder")} 
-                    required 
                     className="h-12"
                   />
+                  {errors.name && (
+                    <p className="text-sm text-destructive">{t("contact.form.nameRequired") || "Name is required"}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">{t("contact.form.companyName")}</label>
                   <Input 
+                    {...register("companyName")}
                     placeholder={t("contact.form.companyNamePlaceholder")} 
                     className="h-12"
                   />
@@ -243,50 +362,84 @@ export function Contact() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">{t("contact.form.email")}</label>
                   <Input 
+                    {...register("email", { 
+                      required: true,
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: t("contact.form.invalidEmail") || "Invalid email address"
+                      }
+                    })}
                     type="email" 
                     placeholder={t("contact.form.emailPlaceholder")} 
-                    required 
                     className="h-12"
                   />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">
+                      {errors.email.message || t("contact.form.emailRequired") || "Email is required"}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2 ">
                   <label className="text-sm font-medium text-foreground">{t("contact.form.phone")}</label>
                   <PhoneInput
-                    required 
                     international
                     defaultCountry="SA"
                     value={phoneValue}
-                    onChange={setPhoneValue}
+                    onChange={(value) => {
+                      setPhoneValue(value);
+                      setPhoneTouched(true);
+                    }}
+                    onBlur={() => setPhoneTouched(true)}
                     placeholder={t("contact.form.phonePlaceholder")}
                     className="phone-input-custom"
                     countrySelectComponent={CountrySelect}
                     numberInputProps={{
-                      className: "flex-1 h-full  px-3 bg-transparent text-foreground focus:outline-none border-0 text-sm"
+                      className: "flex-1 h-full  px-3 bg-transparent text-foreground focus:outline-none border-0 text-sm",
+                      onBlur: () => setPhoneTouched(true),
                     }}
                   />
+                  {!phoneValue && (submitAttempted || phoneTouched) && (
+                    <p className="text-sm text-destructive">{t("contact.form.phoneRequired") || "Phone number is required"}</p>
+                  )}
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-sm font-medium text-foreground">{t("contact.form.serviceInterest")}</label>
-                  <Select required>
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder={t("contact.form.servicePlaceholder")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {serviceKeys.map((serviceKey) => (
-                        <SelectItem key={serviceKey} value={serviceKey}>
-                          {t(`services.${serviceKey}.title`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="serviceInterest"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select 
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder={t("contact.form.servicePlaceholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {serviceKeys.map((serviceKey) => (
+                            <SelectItem key={serviceKey} value={serviceKey}>
+                              {t(`services.${serviceKey}.title`)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.serviceInterest && (
+                    <p className="text-sm text-destructive">{t("contact.form.serviceRequired") || "Service interest is required"}</p>
+                  )}
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-sm font-medium text-foreground">{t("contact.form.message")}</label>
                   <Textarea 
+                    {...register("message", { required: true })}
                     placeholder={t("contact.form.messagePlaceholder")}
-                    required
                     className="min-h-[120px] resize-none"
                   />
+                  {errors.message && (
+                    <p className="text-sm text-destructive">{t("contact.form.messageRequired") || "Message is required"}</p>
+                  )}
                 </div>
               </div>
 

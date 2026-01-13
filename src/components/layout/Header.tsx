@@ -1,8 +1,11 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import logoImage from "@/asesst/logo.png";
 
@@ -21,6 +24,7 @@ const navItems = [
 
 export function Header() {
   const { t, i18n } = useTranslation();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
@@ -64,9 +68,9 @@ export function Header() {
             }`}>
               <div className="flex items-center justify-between">
                 {/* Logo */}
-                <Link to="/" className="flex items-center gap-2 group">
+                <Link href="/" className="flex items-center gap-2 group">
                   <img 
-                    src={logoImage} 
+                    src={logoImage.src} 
                     alt="Top Tier Tech Logo" 
                     className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
                   />
@@ -81,7 +85,7 @@ export function Header() {
                     onMouseLeave={() => setIsServicesOpen(false)}
                   >
                     <Link 
-                      to="/services"
+                      href="/services"
                       className="flex items-center gap-1 text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
                     >
                       {t("header.services")}
@@ -104,7 +108,7 @@ export function Header() {
                             {services.map((service) => (
                               <Link
                                 key={service.key}
-                                to={service.href}
+                                href={service.href}
                                 className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-primary/10 transition-colors duration-200"
                               >
                                 {t(`services.${service.key}.title`)}
@@ -119,7 +123,7 @@ export function Header() {
                   {navItems.map((item) => (
                     <Link
                       key={item.key}
-                      to={item.href}
+                      href={item.href}
                       className="text-primary-foreground/80 hover:text-primary-foreground font-medium transition-colors duration-200"
                     >
                       {t(`header.${item.key}`)}
@@ -163,7 +167,7 @@ export function Header() {
                     })()}
                   </button>
 
-                  <Link to="/contact">
+                  <Link href="/contact">
                     <Button variant="hero" size="default">
                       {t("common.requestConsultation")}
                     </Button>
@@ -179,9 +183,9 @@ export function Header() {
               ? "bg-secondary/80 backdrop-blur-sm"
               : "bg-transparent"
           }`}>
-            <Link to="/" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group">
               <img 
-                src={logoImage} 
+                src={logoImage.src} 
                 alt="Top Tier Tech Logo" 
                 className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-110"
               />
@@ -208,7 +212,7 @@ export function Header() {
               <div>
                 <div className="flex items-center justify-between">
                   <Link
-                    to="/services"
+                    href="/services"
                     className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -237,7 +241,7 @@ export function Header() {
                         {services.map((service) => (
                           <Link
                             key={service.key}
-                            to={service.href}
+                            href={service.href}
                             className="block text-primary-foreground/60 hover:text-primary-foreground text-sm py-1 transition-colors"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
@@ -251,14 +255,14 @@ export function Header() {
               </div>
 
               {navItems.map((item) => (
-                <Link
-                  key={item.key}
-                  to={item.href}
-                  className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {t(`header.${item.key}`)}
-                </Link>
+              <Link
+                key={item.key}
+                href={item.href}
+                className="text-primary-foreground/80 hover:text-primary-foreground font-medium py-2 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {t(`header.${item.key}`)}
+              </Link>
               ))}
               
               {/* Mobile Language Switcher */}
@@ -303,7 +307,7 @@ export function Header() {
                 </button>
               </div>
 
-              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="hero" size="default" className="w-full mt-2">
                   {t("common.requestConsultation")}
                 </Button>
