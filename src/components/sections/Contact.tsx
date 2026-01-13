@@ -179,7 +179,7 @@ export function Contact() {
 
             <div className="space-y-6">
               {[
-                { icon: Mail, key: "email", value: "sales@toptiertech.com" },
+                { icon: Mail, key: "email", value: "sales@tttech.com.sa" },
                 { icon: Phone, key: "phone", value: "+966566955403" },
                 { icon: MapPin, key: "address", value: "12245 Riyadh.Al Sulaimaniyah Dist" },
               ].map((item) => (
