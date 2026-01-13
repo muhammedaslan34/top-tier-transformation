@@ -152,18 +152,25 @@
     "form": {
       "name": "الاسم *",
       "namePlaceholder": "اسمك الكامل",
+      "nameRequired": "الاسم مطلوب",
       "companyName": "اسم الشركة",
       "companyNamePlaceholder": "اسم الشركة",
       "email": "البريد الإلكتروني *",
       "emailPlaceholder": "your@email.com",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "invalidEmail": "عنوان بريد إلكتروني غير صحيح",
       "phone": "الهاتف *",
       "phonePlaceholder": "أدخل رقم الهاتف",
+      "phoneRequired": "رقم الهاتف مطلوب",
       "serviceInterest": "الخدمة المهتم بها *",
       "servicePlaceholder": "اختر خدمة",
+      "serviceRequired": "الخدمة المهتم بها مطلوبة",
       "message": "الرسالة *",
       "messagePlaceholder": "أخبرنا عن مشروعك أو استفسارك...",
+      "messageRequired": "الرسالة مطلوبة",
       "success": "شكراً لك! سنتواصل معك خلال 24 ساعة.",
-      "successDescription": "سيقوم فريقنا بمراجعة استفسارك والرد بسرعة."
+      "successDescription": "سيقوم فريقنا بمراجعة استفسارك والرد بسرعة.",
+      "error": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
     }
   },
   "about": {
