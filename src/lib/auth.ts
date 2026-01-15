@@ -8,13 +8,15 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 export interface SessionData {
   authenticated: boolean;
   expiresAt: number;
+  adminUserId?: string;
 }
 
-export async function createSession(): Promise<string> {
+export async function createSession(adminUserId?: string): Promise<string> {
   const expiresAt = Date.now() + SESSION_MAX_AGE * 1000;
   const sessionData: SessionData = {
     authenticated: true,
     expiresAt,
+    adminUserId,
   };
   
   // In production, you'd want to sign this with a secret
@@ -67,4 +69,21 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 
 export async function hashPassword(password: string): Promise<string> {
   return hash(password, 10);
+}
+
+export async function getCurrentAdminUserId(): Promise<string | null> {
+  const sessionToken = await getSessionToken();
+  if (!sessionToken) return null;
+  
+  const isValid = await verifySession(sessionToken);
+  if (!isValid) return null;
+  
+  try {
+    const sessionData: SessionData = JSON.parse(
+      Buffer.from(sessionToken, "base64").toString()
+    );
+    return sessionData.adminUserId || null;
+  } catch {
+    return null;
+  }
 }

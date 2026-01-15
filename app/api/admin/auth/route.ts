@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session
-    const sessionToken = await createSession();
+    // Create session with admin user ID
+    const sessionToken = await createSession(adminUser.id);
     await setSessionCookie(sessionToken);
 
     return NextResponse.json({ success: true });

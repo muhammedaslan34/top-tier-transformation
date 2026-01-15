@@ -21,6 +21,7 @@ import "react-phone-number-input/style.css";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 const serviceKeys = [
   "digitalTransformation",
@@ -123,6 +124,8 @@ export function Contact() {
   const [phoneValue, setPhoneValue] = useState<PhoneValue>();
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
   
   const {
     register,
@@ -143,9 +146,15 @@ export function Contact() {
 
   const onSubmit = async (data: ContactFormData) => {
     setSubmitAttempted(true);
-    
+
     if (!phoneValue) {
       toast.error(t("contact.form.phoneRequired") || "Phone number is required");
+      return;
+    }
+
+    // Only require CAPTCHA if Turnstile is configured
+    if (process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY && !turnstileToken) {
+      toast.error(t("contact.form.captchaRequired") || "Please complete the CAPTCHA verification");
       return;
     }
 
@@ -159,6 +168,7 @@ export function Contact() {
         phone: phoneValue,
         serviceInterest: data.serviceInterest,
         message: data.message,
+        turnstileToken,
       };
 
       console.log("Sending contact form request:", { ...requestBody, message: "[message hidden]" });
@@ -230,6 +240,8 @@ export function Contact() {
       setPhoneValue(undefined);
       setPhoneTouched(false);
       setSubmitAttempted(false);
+      setTurnstileToken(null);
+      setTurnstileKey((k) => k + 1);
     } catch (error) {
       console.error("Contact form error:", error);
       toast.error(
@@ -443,12 +455,34 @@ export function Contact() {
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                variant="hero" 
-                size="lg" 
+              {/* Turnstile CAPTCHA - only show when siteKey is configured */}
+              {process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY && (
+                <div className="flex justify-center mt-6">
+                  <Turnstile
+                    key={turnstileKey}
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onError={() => {
+                      setTurnstileToken(null);
+                      toast.error(t("contact.form.captchaError") || "CAPTCHA verification failed. Please try again.");
+                    }}
+                    onExpire={() => {
+                      setTurnstileToken(null);
+                    }}
+                    options={{
+                      theme: "auto",
+                      size: "normal",
+                    }}
+                  />
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                variant="hero"
+                size="lg"
                 className="w-full mt-6"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (!!process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY && !turnstileToken)}
               >
                 {isSubmitting ? (
                   t("common.sending")

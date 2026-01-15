@@ -1,11 +1,38 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 5 requests per hour per IP
+    const clientIp = getClientIp(request);
+    const rateLimitResult = checkRateLimit(`contact:${clientIp}`, {
+      windowMs: 60 * 60 * 1000, // 1 hour
+      maxRequests: 5,
+    });
+
+    if (!rateLimitResult.success) {
+      const retryAfter = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
+      return NextResponse.json(
+        {
+          error: "Too many requests. Please try again later.",
+          retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(retryAfter),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(rateLimitResult.resetTime),
+          },
+        }
+      );
+    }
+
     // Check if Resend API key is configured
     if (!resend || !process.env.RESEND_API_KEY) {
       console.error("RESEND_API_KEY is not configured. Please add RESEND_API_KEY to your .env.local file.");
@@ -34,7 +61,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const { name, companyName, email, phone, serviceInterest, message } = body;
+    const { name, companyName, email, phone, serviceInterest, message, turnstileToken } = body;
 
     // Validate required fields
     if (!name || !email || !phone || !serviceInterest || !message) {
@@ -51,6 +78,24 @@ export async function POST(request: NextRequest) {
         { error: "Invalid email format" },
         { status: 400 }
       );
+    }
+
+    // Verify Turnstile CAPTCHA token (only if secret key is configured)
+    if (process.env.TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return NextResponse.json(
+          { error: "CAPTCHA verification required" },
+          { status: 400 }
+        );
+      }
+
+      const isTurnstileValid = await verifyTurnstileToken(turnstileToken);
+      if (!isTurnstileValid) {
+        return NextResponse.json(
+          { error: "CAPTCHA verification failed. Please try again." },
+          { status: 400 }
+        );
+      }
     }
 
     // Get service name from translation key (we'll use the key for now, can be improved)
@@ -239,11 +284,11 @@ export async function POST(request: NextRequest) {
       }
       
       return NextResponse.json(
-        { 
+        {
           error: errorMessage,
-          details: errorStack
+          ...(process.env.NODE_ENV === "development" && { details: errorStack }),
         },
-        { 
+        {
           status: 500,
           headers: {
             "Content-Type": "application/json",
@@ -256,11 +301,11 @@ export async function POST(request: NextRequest) {
     console.error("Contact form error:", error);
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
     const errorStack = error instanceof Error ? error.stack : undefined;
-    
+
     return NextResponse.json(
-      { 
+      {
         error: errorMessage,
-        details: errorStack
+        ...(process.env.NODE_ENV === "development" && { details: errorStack }),
       },
       { 
         status: 500,

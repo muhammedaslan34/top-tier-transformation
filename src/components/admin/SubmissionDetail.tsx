@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Mail, Phone, Building2, Calendar, CheckCircle2, XCircle } from "lucide-react";
+import { ReplyForm } from "./ReplyForm";
+import { ReplyHistory } from "./ReplyHistory";
 
 interface Submission {
   id: string;
@@ -22,6 +24,17 @@ interface Submission {
   updatedAt: string;
 }
 
+interface Reply {
+  id: string;
+  message: string;
+  sentAt: string;
+  adminUser: {
+    id: string;
+    name: string | null;
+    email: string;
+  } | null;
+}
+
 interface SubmissionDetailProps {
   submission: Submission;
 }
@@ -30,6 +43,8 @@ export function SubmissionDetail({ submission }: SubmissionDetailProps) {
   const router = useRouter();
   const [isRead, setIsRead] = useState(submission.isRead);
   const [loading, setLoading] = useState(false);
+  const [replies, setReplies] = useState<Reply[]>([]);
+  const [loadingReplies, setLoadingReplies] = useState(true);
 
   const serviceNames: Record<string, string> = {
     digitalTransformation: "Digital Transformation",
@@ -38,6 +53,39 @@ export function SubmissionDetail({ submission }: SubmissionDetailProps) {
     beneficiaryExperience: "Beneficiary Experience",
     innovationServices: "Innovation Services",
     governanceRiskCompliance: "Governance, Risk & Compliance",
+  };
+
+  // Fetch replies on component mount
+  useEffect(() => {
+    const fetchReplies = async () => {
+      try {
+        setLoadingReplies(true);
+        const response = await fetch(`/api/admin/submissions/${submission.id}/replies`);
+        if (response.ok) {
+          const data = await response.json();
+          setReplies(data);
+        }
+      } catch (error) {
+        console.error("Error fetching replies:", error);
+      } finally {
+        setLoadingReplies(false);
+      }
+    };
+
+    fetchReplies();
+  }, [submission.id]);
+
+  const handleReplySent = async () => {
+    // Refresh replies after sending
+    try {
+      const response = await fetch(`/api/admin/submissions/${submission.id}/replies`);
+      if (response.ok) {
+        const data = await response.json();
+        setReplies(data);
+      }
+    } catch (error) {
+      console.error("Error refreshing replies:", error);
+    }
   };
 
   const handleToggleRead = async () => {
@@ -171,6 +219,20 @@ export function SubmissionDetail({ submission }: SubmissionDetailProps) {
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Send Reply</CardTitle>
+              <CardDescription>
+                Send a reply to {submission.name} at {submission.email}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ReplyForm submissionId={submission.id} onReplySent={handleReplySent} />
+            </CardContent>
+          </Card>
+
+          {!loadingReplies && <ReplyHistory replies={replies} />}
         </div>
 
         <div className="space-y-6">
