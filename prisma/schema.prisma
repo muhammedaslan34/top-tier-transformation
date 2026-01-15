@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ContactSubmission {
+  id              String   @id @default(cuid())
+  name            String
+  companyName     String?
+  email           String
+  phone           String
+  serviceInterest String
+  message         String   @db.Text
+  isRead          Boolean  @default(false)
+  status          String   @default("new") // new, read, archived
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  replies         Reply[]
+
+  @@index([email])
+  @@index([createdAt])
+  @@index([status])
+  @@index([isRead])
+  @@map("contact_submissions")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // bcrypt hashed password
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  replies   Reply[]
+
+  @@index([email])
+  @@map("admin_users")
+}
+
+model Reply {
+  id           String            @id @default(cuid())
+  submissionId String
+  adminUserId  String?
+  message      String            @db.Text
+  sentAt       DateTime          @default(now())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  submission   ContactSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  adminUser    AdminUser?        @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+
+  @@index([submissionId])
+  @@index([adminUserId])
+  @@index([sentAt])
+  @@map("replies")
+}

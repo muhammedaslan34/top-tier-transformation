@@ -60,9 +60,17 @@ The application will be available at `http://localhost:3000`
 Create a `.env.local` file in the root directory with the following:
 
 ```env
+# Email Service
 RESEND_API_KEY=re_your_api_key_here
 # Optional: Set recipient email for testing (defaults to your verified email)
 # RESEND_RECIPIENT_EMAIL=your-verified-email@gmail.com
+
+# Database
+DATABASE_URL=postgresql://user:password@host:port/database
+
+# Admin Panel Authentication
+ADMIN_PASSWORD_HASH=your_bcrypt_hashed_password_here
+ADMIN_SESSION_SECRET=your_random_secret_string_here
 ```
 
 To get your Resend API key:
@@ -134,6 +142,67 @@ This creates an optimized production build in the `.next/` folder.
 - **Any Node.js Hosting**: Run `npm run build` and `npm run start`
 
 **Important**: Make sure to add your `RESEND_API_KEY` environment variable in your hosting platform's environment variables settings.
+
+## Admin Panel
+
+The admin panel allows you to view and manage all contact form submissions.
+
+### Setup
+
+1. **Database Setup**:
+   ```sh
+   # Run Prisma migrations to create the database tables
+   npx prisma migrate dev
+   
+   # Generate Prisma client
+   npx prisma generate
+   ```
+
+2. **Generate Admin Password Hash**:
+   ```sh
+   # Generate a password hash for your admin password
+   node scripts/generate-password-hash.js "your-secure-password"
+   
+   # Copy the generated hash and add it to .env.local as ADMIN_PASSWORD_HASH
+   ```
+
+3. **Set Session Secret**:
+   ```sh
+   # Generate a random secret for session management
+   # You can use: openssl rand -base64 32
+   # Add it to .env.local as ADMIN_SESSION_SECRET
+   ```
+
+### Accessing the Admin Panel
+
+1. Navigate to `/admin/login` in your browser
+2. Enter your admin password
+3. You'll be redirected to the admin dashboard at `/admin`
+
+### Features
+
+- **View Submissions**: See all contact form submissions in a table
+- **Filter & Search**: Filter by service, status, date range, and search by name/email/message
+- **View Details**: Click on any submission to see full details
+- **Mark as Read/Unread**: Toggle submission read status
+- **Change Status**: Mark submissions as new, read, or archived
+- **Delete Submissions**: Remove submissions with confirmation
+- **Export to CSV**: Download all submissions (or filtered results) as CSV
+
+### Admin Routes
+
+- `/admin/login` - Login page
+- `/admin` - Dashboard with submissions list
+- `/admin/submissions/[id]` - Individual submission detail view
+
+### API Routes
+
+- `POST /api/admin/auth` - Login/logout
+- `GET /api/admin/submissions` - List submissions (with filters and pagination)
+- `GET /api/admin/submissions/[id]` - Get single submission
+- `PATCH /api/admin/submissions/[id]` - Update submission (mark as read, change status)
+- `DELETE /api/admin/submissions/[id]` - Delete submission
+- `GET /api/admin/submissions/export` - Export submissions as CSV
 
 ## License
 
