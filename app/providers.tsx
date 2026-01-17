@@ -15,10 +15,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   // Handle RTL/LTR direction based on language
   useEffect(() => {
+    // Only run on client side after hydration
+    if (typeof window === "undefined") return;
+    
     const isRTL = i18n.language === "ar";
-    if (typeof document !== "undefined") {
-      document.documentElement.dir = isRTL ? "rtl" : "ltr";
-      document.documentElement.lang = i18n.language;
+    const newDir = isRTL ? "rtl" : "ltr";
+    const newLang = i18n.language;
+    
+    // Only update if values have changed to avoid unnecessary re-renders
+    if (document.documentElement.dir !== newDir) {
+      document.documentElement.dir = newDir;
+    }
+    if (document.documentElement.lang !== newLang) {
+      document.documentElement.lang = newLang;
     }
   }, [i18n.language]);
 
