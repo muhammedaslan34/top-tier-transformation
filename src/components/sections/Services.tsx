@@ -131,7 +131,7 @@ export function Services() {
 
               {/* Features */}
               <ul className="space-y-2 mb-6 flex-grow">
-                {t(`services.${service.key}.features`, { returnObjects: true }).map((feature: string, idx: number) => (
+                {(t(`services.${service.key}.features`, { returnObjects: true }) as string[]).map((feature: string, idx: number) => (
                   <li
                     key={idx}
                     className="flex items-center gap-2 text-sm text-foreground/80"

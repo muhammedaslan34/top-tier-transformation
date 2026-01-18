@@ -4,6 +4,8 @@ const nextConfig = {
   images: {
     domains: [],
   },
+  // Enable standalone output for Docker
+  output: 'standalone',
   // Enable experimental features if needed
   experimental: {
     // Add any experimental features here

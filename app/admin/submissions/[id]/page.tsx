@@ -3,17 +3,26 @@ import { SubmissionDetail } from "@/components/admin/SubmissionDetail";
 import { prisma } from "@/lib/prisma";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function SubmissionDetailPage({ params }: PageProps) {
+  const { id } = await params;
   const submission = await prisma.contactSubmission.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!submission) {
     redirect("/admin");
   }
 
-  return <SubmissionDetail submission={submission} />;
+  return (
+    <SubmissionDetail
+      submission={{
+        ...submission,
+        createdAt: submission.createdAt.toISOString(),
+        updatedAt: submission.updatedAt.toISOString(),
+      }}
+    />
+  );
 }

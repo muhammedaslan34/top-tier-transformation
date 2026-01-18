@@ -8,15 +8,16 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Check authentication
     const authError = await requireAuth(request);
     if (authError) return authError;
 
     const replies = await prisma.reply.findMany({
-      where: { submissionId: params.id },
+      where: { submissionId: id },
       include: {
         adminUser: {
           select: {
@@ -41,9 +42,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Check authentication
     const authError = await requireAuth(request);
     if (authError) return authError;
@@ -70,7 +72,7 @@ export async function POST(
 
     // Verify submission exists
     const submission = await prisma.contactSubmission.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     if (!submission) {
@@ -92,7 +94,7 @@ export async function POST(
     // Save reply to database
     const reply = await prisma.reply.create({
       data: {
-        submissionId: params.id,
+        submissionId: id,
         adminUserId: adminUserId,
         message: message.trim(),
         sentAt: new Date(),

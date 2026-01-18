@@ -4,15 +4,16 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Check authentication
     const authError = await requireAuth(request);
     if (authError) return authError;
 
     const submission = await prisma.contactSubmission.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!submission) {
@@ -34,9 +35,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Check authentication
     const authError = await requireAuth(request);
     if (authError) return authError;
@@ -53,7 +55,7 @@ export async function PATCH(
     }
 
     const submission = await prisma.contactSubmission.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 
@@ -69,15 +71,16 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Check authentication
     const authError = await requireAuth(request);
     if (authError) return authError;
 
     await prisma.contactSubmission.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });
