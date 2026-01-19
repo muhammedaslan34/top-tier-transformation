@@ -25,6 +25,9 @@ i18n
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
+    // Return empty string instead of key if translation is missing (will use defaultValue)
+    returnEmptyString: false,
+    returnNull: false,
   });
 
 export default i18n;

@@ -84,10 +84,14 @@ export async function POST(request: NextRequest) {
     // If TURNSTILE_SECRET_KEY is set but no token is provided, skip verification
     // (this allows the form to work if CAPTCHA is not displayed on frontend)
     if (process.env.TURNSTILE_SECRET_KEY && turnstileToken) {
-      const isTurnstileValid = await verifyTurnstileToken(turnstileToken);
-      if (!isTurnstileValid) {
+      const clientIp = getClientIp(request);
+      const turnstileResult = await verifyTurnstileToken(turnstileToken, clientIp);
+      if (!turnstileResult.success) {
         return NextResponse.json(
-          { error: "CAPTCHA verification failed. Please try again." },
+          { 
+            error: turnstileResult.error || "CAPTCHA verification failed. Please try again.",
+            details: process.env.NODE_ENV === "development" ? "Turnstile verification failed" : undefined
+          },
           { status: 400 }
         );
       }

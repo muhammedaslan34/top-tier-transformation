@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { SubmissionsTable } from "@/components/admin/SubmissionsTable";
 import { SubmissionFilters, type FilterState } from "@/components/admin/SubmissionFilters";
 import { ExportButton } from "@/components/admin/ExportButton";
+import { AdminUsers } from "@/components/admin/AdminUsers";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Submission {
   id: string;
@@ -25,6 +27,7 @@ interface Pagination {
 }
 
 export default function AdminDashboard() {
+  const [activeTab, setActiveTab] = useState("submissions");
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<Pagination>({
@@ -94,59 +97,87 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Contact Form Submissions</h1>
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-1">
-            Manage and review all contact form submissions
+            Manage submissions and admin users
           </p>
         </div>
-        <ExportButton filters={filters} />
       </div>
 
-      <SubmissionFilters onFilterChange={handleFilterChange} />
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          <TabsTrigger value="users">Admin Users</TabsTrigger>
+        </TabsList>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Submissions</CardTitle>
-          <CardDescription>
-            Showing {submissions.length} of {pagination.total} submissions
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading...</div>
-          ) : (
-            <>
-              <SubmissionsTable submissions={submissions} onDelete={handleDelete} />
-              
-              {pagination.totalPages > 1 && (
-                <div className="flex justify-between items-center mt-4">
-                  <div className="text-sm text-muted-foreground">
-                    Page {pagination.page} of {pagination.totalPages}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(pagination.page - 1)}
-                      disabled={pagination.page === 1}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(pagination.page + 1)}
-                      disabled={pagination.page === pagination.totalPages}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
+        <TabsContent value="submissions" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-semibold">Contact Form Submissions</h2>
+              <p className="text-muted-foreground mt-1">
+                Manage and review all contact form submissions
+              </p>
+            </div>
+            <ExportButton filters={filters} />
+          </div>
+
+          <SubmissionFilters onFilterChange={handleFilterChange} />
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Submissions</CardTitle>
+              <CardDescription>
+                Showing {submissions.length} of {pagination.total} submissions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="text-center py-8 text-muted-foreground">Loading...</div>
+              ) : (
+                <>
+                  <SubmissionsTable submissions={submissions} onDelete={handleDelete} />
+                  
+                  {pagination.totalPages > 1 && (
+                    <div className="flex justify-between items-center mt-4">
+                      <div className="text-sm text-muted-foreground">
+                        Page {pagination.page} of {pagination.totalPages}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePageChange(pagination.page - 1)}
+                          disabled={pagination.page === 1}
+                        >
+                          Previous
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePageChange(pagination.page + 1)}
+                          disabled={pagination.page === pagination.totalPages}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="users" className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-semibold mb-1">Admin User Management</h2>
+            <p className="text-muted-foreground">
+              Create and manage admin user accounts
+            </p>
+          </div>
+          <AdminUsers />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

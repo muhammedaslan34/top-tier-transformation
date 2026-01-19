@@ -338,7 +338,7 @@ export default function Privacy() {
                         If you have any questions about these Terms of Service, please contact us at:
                       </p>
                       <p className="mt-2">
-                        <strong>Email:</strong> legal@toptiertech.com<br />
+                        <strong>Email:</strong> info@tttech.com.sa<br />
                         <strong>Address:</strong> Top Tier Tech, 12245 Riyadh.Al Sulaimaniyah Dist
                       </p>
                     </div>

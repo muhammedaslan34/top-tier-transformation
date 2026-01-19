@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "../../../middleware";
-import { getCurrentAdminUserId } from "@/lib/auth";
+import { verifySession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
 
@@ -50,13 +50,68 @@ export async function POST(
     const authError = await requireAuth(request);
     if (authError) return authError;
 
-    // Get current admin user ID
-    const adminUserId = await getCurrentAdminUserId();
-    if (!adminUserId) {
+    // Get current admin user ID from session
+    const sessionToken = request.cookies.get("admin_session")?.value;
+    if (!sessionToken) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
+    }
+
+    const isValid = await verifySession(sessionToken);
+    if (!isValid) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Extract admin user ID from session
+    let adminUserId: string | null = null;
+    try {
+      const sessionData = JSON.parse(
+        Buffer.from(sessionToken, "base64").toString()
+      );
+      adminUserId = sessionData.adminUserId || null;
+      
+      console.log("Session data:", { 
+        authenticated: sessionData.authenticated,
+        adminUserId: sessionData.adminUserId,
+        hasAdminUserId: !!sessionData.adminUserId,
+        expiresAt: sessionData.expiresAt 
+      });
+    } catch (parseError) {
+      console.error("Failed to parse session:", parseError);
+      return NextResponse.json(
+        { error: "Invalid session", details: process.env.NODE_ENV === "development" ? String(parseError) : undefined },
+        { status: 401 }
+      );
+    }
+
+    if (!adminUserId) {
+      console.error("Admin user ID not found in session");
+      return NextResponse.json(
+        { error: "Admin user ID not found in session" },
+        { status: 401 }
+      );
+    }
+
+    // Verify admin user exists and get admin user info
+    let adminUser = await prisma.adminUser.findUnique({
+      where: { id: adminUserId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    // If admin user not found, log warning but allow reply (adminUserId is optional in schema)
+    if (!adminUser) {
+      console.warn("Admin user not found in database:", adminUserId);
+      console.warn("Creating reply without admin user association");
+      adminUser = null;
     }
 
     // Get request body
@@ -82,20 +137,13 @@ export async function POST(
       );
     }
 
-    // Get admin user info for email
-    const adminUser = await prisma.adminUser.findUnique({
-      where: { id: adminUserId },
-      select: {
-        name: true,
-        email: true,
-      },
-    });
+    // Admin user info already retrieved above
 
-    // Save reply to database
+    // Save reply to database (adminUserId is optional - null if admin user not found)
     const reply = await prisma.reply.create({
       data: {
         submissionId: id,
-        adminUserId: adminUserId,
+        adminUserId: adminUser ? adminUserId : null,
         message: message.trim(),
         sentAt: new Date(),
       },
@@ -239,10 +287,24 @@ export async function POST(
         warning: "Reply saved but email service not configured",
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating reply:", error);
+    console.error("Error stack:", error.stack);
+    console.error("Error details:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+    });
     return NextResponse.json(
-      { error: "Failed to create reply" },
+      { 
+        error: "Failed to create reply",
+        message: error.message || "Unknown error",
+        details: process.env.NODE_ENV === "development" ? {
+          message: error.message,
+          code: error.code,
+          stack: error.stack,
+        } : undefined
+      },
       { status: 500 }
     );
   }

@@ -170,7 +170,9 @@
       "messageRequired": "Message is required",
       "success": "Thank you! We'll be in touch within 24 hours.",
       "successDescription": "Our team will review your inquiry and respond promptly.",
-      "error": "Failed to send message. Please try again."
+      "error": "Failed to send message. Please try again.",
+      "captchaRequired": "Please complete the CAPTCHA verification",
+      "captchaError": "CAPTCHA verification failed. Please try again."
     }
   },
   "about": {
@@ -370,7 +372,7 @@
         "contact": {
           "title": "12. Contact Information",
           "content": "If you have any questions about these Terms of Service, please contact us at:",
-          "email": "Email: legal@toptiertech.com",
+          "email": "Email: info@tttech.com.sa",
           "address": "Address: Top Tier Tech, [Your Address]"
         }
       }

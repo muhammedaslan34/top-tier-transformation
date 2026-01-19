@@ -35,12 +35,25 @@ export function ReplyForm({ submissionId, onReplySent }: ReplyFormProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
+        credentials: "include", // Include cookies in the request
       });
 
-      const data = await response.json();
+      let data: any = {};
+      try {
+        const responseText = await response.text();
+        if (responseText) {
+          data = JSON.parse(responseText);
+        }
+      } catch (parseError) {
+        console.error("Failed to parse response:", parseError);
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to send reply");
+        const errorMsg = data.error || data.message || `Failed to send reply (${response.status})`;
+        const errorDetails = data.details ? ` - ${JSON.stringify(data.details)}` : '';
+        console.error("Reply error:", { status: response.status, data });
+        throw new Error(`${errorMsg}${errorDetails}`);
       }
 
       // Success
