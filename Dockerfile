@@ -30,8 +30,15 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy application source
 COPY . .
 
-# Generate Prisma Client
+# Generate Prisma Client (schema.prisma has no url - using adapter in code)
 RUN npx prisma generate
+
+# Create prisma.config.ts for migrations (needed for prisma migrate deploy)
+RUN echo 'import { defineConfig, env } from "prisma/config";' > prisma.config.ts && \
+    echo 'export default defineConfig({' >> prisma.config.ts && \
+    echo '  schema: "prisma/schema.prisma",' >> prisma.config.ts && \
+    echo '  datasource: { url: env("DATABASE_URL") },' >> prisma.config.ts && \
+    echo '});' >> prisma.config.ts
 
 # Build Next.js application
 RUN npm run build
@@ -55,6 +62,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/package.json ./package.json
 
@@ -72,5 +80,9 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
+# DATABASE_URL should be provided as environment variable at runtime
+# It's required for prisma migrate deploy
+
 # Create startup script to run migrations and start app
+# prisma.config.ts is available for migrate deploy
 CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
