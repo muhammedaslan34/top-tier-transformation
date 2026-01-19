@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/sections/Hero";
@@ -11,7 +11,7 @@ import { OurProcess } from "@/components/sections/OurProcess";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/layout/Footer";
 
-export default function Home() {
+function HashScrollHandler() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -29,8 +29,15 @@ export default function Home() {
     }
   }, [searchParams]);
 
+  return null;
+}
+
+export default function Home() {
   return (
     <div className="min-h-screen">
+      <Suspense fallback={null}>
+        <HashScrollHandler />
+      </Suspense>
       <Header />
       <main>
         <Hero />

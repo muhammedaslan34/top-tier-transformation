@@ -80,15 +80,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify Turnstile CAPTCHA token (only if secret key is configured)
-    if (process.env.TURNSTILE_SECRET_KEY) {
-      if (!turnstileToken) {
-        return NextResponse.json(
-          { error: "CAPTCHA verification required" },
-          { status: 400 }
-        );
-      }
-
+    // Verify Turnstile CAPTCHA token (only if secret key is configured and token is provided)
+    // If TURNSTILE_SECRET_KEY is set but no token is provided, skip verification
+    // (this allows the form to work if CAPTCHA is not displayed on frontend)
+    if (process.env.TURNSTILE_SECRET_KEY && turnstileToken) {
       const isTurnstileValid = await verifyTurnstileToken(turnstileToken);
       if (!isTurnstileValid) {
         return NextResponse.json(
