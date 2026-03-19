@@ -44,10 +44,10 @@ cd top-tier-transformation
 npm install
 
 # Step 4: Set up environment variables
-# Copy .env.example to .env.local and add your Resend API key
+# Copy .env.example to  and add your Resend API key
 # Get your API key from https://resend.com/api-keys
-cp .env.example .env.local
-# Then edit .env.local and add your RESEND_API_KEY
+cp .env.example 
+# Then edit  and add your RESEND_API_KEY
 
 # Step 5: Start the development server
 npm run dev
@@ -57,7 +57,7 @@ The application will be available at `http://localhost:3000`
 
 ## Environment Variables
 
-Create a `.env.local` file in the root directory with the following:
+Create a `` file in the root directory with the following:
 
 ```env
 # Email Service
@@ -77,7 +77,7 @@ To get your Resend API key:
 1. Sign up at https://resend.com
 2. Go to API Keys section
 3. Create a new API key
-4. Copy the key and add it to `.env.local`
+4. Copy the key and add it to ``
 
 ### Resend Testing Mode
 
@@ -163,14 +163,14 @@ The admin panel allows you to view and manage all contact form submissions.
    # Generate a password hash for your admin password
    node scripts/generate-password-hash.js "your-secure-password"
    
-   # Copy the generated hash and add it to .env.local as ADMIN_PASSWORD_HASH
+   # Copy the generated hash and add it to  as ADMIN_PASSWORD_HASH
    ```
 
 3. **Set Session Secret**:
    ```sh
    # Generate a random secret for session management
    # You can use: openssl rand -base64 32
-   # Add it to .env.local as ADMIN_SESSION_SECRET
+   # Add it to  as ADMIN_SESSION_SECRET
    ```
 
 ### Accessing the Admin Panel

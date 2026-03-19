@@ -11,7 +11,7 @@ async function generateHash() {
   const hashedPassword = await hash(password, 10);
   console.log("\nPassword hash generated:");
   console.log(hashedPassword);
-  console.log("\nAdd this to your .env.local file:");
+  console.log("\nAdd this to your .env file:");
   console.log(`ADMIN_PASSWORD_HASH="${hashedPassword}"\n`);
 }
 

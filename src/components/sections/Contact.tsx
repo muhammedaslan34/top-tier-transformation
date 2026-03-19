@@ -340,9 +340,10 @@ export function Contact() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-3"
           >
-            <form 
+            <form
               onSubmit={handleFormSubmit(onSubmit)}
               className="bg-card rounded-2xl p-8 shadow-card"
+              suppressHydrationWarning
             >
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">

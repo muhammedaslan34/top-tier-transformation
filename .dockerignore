@@ -11,7 +11,6 @@ build
 
 # Environment files (will be provided separately)
 .env
-.env.local
 .env.production
 .env.development
 .env.test
