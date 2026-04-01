@@ -1,71 +1,11 @@
 /** @type {import('next').NextConfig} */
 
+// NOTE: Content-Security-Policy is intentionally absent here.
+// It is generated per-request in middleware.ts using a cryptographic nonce,
+// which eliminates 'unsafe-inline' from script-src. Static headers set here
+// would overwrite the nonce-based CSP and break it.
+
 const isDev = process.env.NODE_ENV === 'development';
-
-// ---------------------------------------------------------------------------
-// Content-Security-Policy
-//
-// TUNING NOTES:
-//   - script-src: 'unsafe-inline' is required because Next.js injects inline
-//     bootstrap scripts for hydration. To remove it, add nonce-based CSP via
-//     middleware (see: https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy).
-//     'unsafe-eval' is added in dev mode only (React/Turbopack needs it for
-//     callstack reconstruction and HMR). It is NOT included in production.
-//   - style-src: 'unsafe-inline' is required for Tailwind CSS inline styles.
-//   - Google Fonts requires:
-//       style-src  → https://fonts.googleapis.com
-//       font-src   → https://fonts.gstatic.com
-//   - Cloudflare Turnstile requires:
-//       script-src  → https://challenges.cloudflare.com
-//       frame-src   → https://challenges.cloudflare.com
-//       connect-src → https://challenges.cloudflare.com
-//   - Resend is server-side only (API routes → Resend servers), so it needs
-//     no CSP allowance — those calls never originate from the browser.
-//   - If you add Google Fonts, analytics, or CDN assets later, add the
-//     corresponding origins to the relevant directives.
-// ---------------------------------------------------------------------------
-const ContentSecurityPolicy = `
-  default-src 'self';
-
-  script-src
-    'self'
-    'unsafe-inline'
-    ${isDev ? "'unsafe-eval'" : ''}
-    https://challenges.cloudflare.com;
-
-  style-src
-    'self'
-    'unsafe-inline'
-    https://fonts.googleapis.com;
-
-  img-src
-    'self'
-    data:
-    blob:;
-
-  font-src
-    'self'
-    https://fonts.gstatic.com;
-
-  connect-src
-    'self'
-    https://challenges.cloudflare.com;
-
-  frame-src
-    https://challenges.cloudflare.com;
-
-  frame-ancestors 'self';
-
-  base-uri 'self';
-
-  form-action 'self';
-
-  object-src 'none';
-
-  upgrade-insecure-requests;
-`
-  .replace(/\s{2,}/g, ' ')  // collapse whitespace so the header value is a single line
-  .trim();
 
 const securityHeaders = [
   // ---------------------------------------------------------------------------
@@ -82,15 +22,6 @@ const securityHeaders = [
           value: 'max-age=31536000; includeSubDomains; preload',
         },
       ]),
-
-  // ---------------------------------------------------------------------------
-  // Content-Security-Policy
-  // Controls which resources the browser is allowed to load.
-  // ---------------------------------------------------------------------------
-  {
-    key: 'Content-Security-Policy',
-    value: ContentSecurityPolicy,
-  },
 
   // ---------------------------------------------------------------------------
   // X-Frame-Options

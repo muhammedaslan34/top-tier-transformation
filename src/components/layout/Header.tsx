@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import logoImage from "@/asesst/logo.png";
+import { GB, SA } from "country-flag-icons/react/3x2";
 
 const services = [
   { key: "digitalTransformation", href: "/services/digital-transformation" },
@@ -30,13 +31,14 @@ export function Header() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
 
-  const currentLang = i18n.language;
+  const normalizeLangCode = (lang?: string) => (lang || "").split("-")[0].toLowerCase();
+  const currentLang = normalizeLangCode(i18n.resolvedLanguage || i18n.language);
   const languages = [
-    { code: "en", name: "English", flag: "🇬🇧", flagCode: "gb" },
-    { code: "ar", name: "العربية", flag: "🇸🇦", flagCode: "sa" },
+    { code: "en", name: "English", FlagIcon: GB },
+    { code: "ar", name: "العربية", FlagIcon: SA },
   ];
-  
-  const currentLanguage = languages.find(l => l.code === currentLang) || languages[0];
+
+  const oppositeLang = languages.find((l) => l.code !== currentLang) || languages[0];
 
   const changeLanguage = (langCode: string) => {
     i18n.changeLanguage(langCode);
@@ -133,38 +135,19 @@ export function Header() {
                   {/* Language Switcher - Flag Button */}
                   <button
                     onClick={() => {
-                      const nextLang = languages.find(l => l.code !== currentLang) || languages[0];
-                      changeLanguage(nextLang.code);
+                      changeLanguage(oppositeLang.code);
                     }}
                     className="flex items-center justify-center p-1.5 hover:bg-primary-foreground/10 transition-all duration-200 hover:scale-110"
-                    aria-label={`Switch to ${languages.find(l => l.code !== currentLang)?.name || "other language"}`}
-                    title={`Switch to ${languages.find(l => l.code !== currentLang)?.name || "other language"}`}
+                    aria-label={`Switch to ${oppositeLang.name || "other language"}`}
+                    title={`Switch to ${oppositeLang.name || "other language"}`}
                   >
                     {/* Show only the opposite language flag */}
-                    {(() => {
-                      const oppositeLang = languages.find(l => l.code !== currentLang) || languages[0];
-                      return (
-                        <div className="w-7 h-5 overflow-hidden flex-shrink-0 rounded-[2px]">
-                          <img
-                            src={`https://flagcdn.com/w160/${oppositeLang.flagCode}.png`}
-                            alt={oppositeLang.name}
-                            className="w-full h-full object-cover"
-                            style={{ imageRendering: "crisp-edges" as any }}
-                            onError={(e) => {
-                              // Fallback to emoji if image fails
-                              (e.target as HTMLImageElement).style.display = "none";
-                              const parent = (e.target as HTMLImageElement).parentElement;
-                              if (parent && !parent.querySelector(".flag-emoji")) {
-                                const emoji = document.createElement("span");
-                                emoji.className = "flag-emoji text-lg";
-                                emoji.textContent = oppositeLang.flag;
-                                parent.appendChild(emoji);
-                              }
-                            }}
-                          />
-                        </div>
-                      );
-                    })()}
+                    <div className="w-7 h-5 overflow-hidden flex-shrink-0 rounded-[2px]">
+                      <oppositeLang.FlagIcon
+                        title={oppositeLang.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </button>
 
                   <Link href="/contact">
@@ -269,41 +252,23 @@ export function Header() {
               <div className="pt-2 border-t border-primary-foreground/10 mt-2">
                 <button
                   onClick={() => {
-                    const nextLang = languages.find(l => l.code !== currentLang) || languages[0];
-                    changeLanguage(nextLang.code);
+                    changeLanguage(oppositeLang.code);
                     setIsMobileMenuOpen(false);
                   }}
                   className="w-full flex items-center justify-center gap-3 px-4 py-3 hover:bg-primary-foreground/10 transition-all duration-200"
-                  aria-label={`Switch to ${languages.find(l => l.code !== currentLang)?.name || "other language"}`}
+                  aria-label={`Switch to ${oppositeLang.name || "other language"}`}
                 >
-                  {(() => {
-                    const oppositeLang = languages.find(l => l.code !== currentLang) || languages[0];
-                    return (
-                      <>
-                        <div className="w-7 h-5 overflow-hidden flex-shrink-0 rounded-[2px]">
-                          <img
-                            src={`https://flagcdn.com/w160/${oppositeLang.flagCode}.png`}
-                            alt={oppositeLang.name}
-                            className="w-full h-full object-cover"
-                            style={{ imageRendering: "high-quality" as any }}
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                              const parent = (e.target as HTMLImageElement).parentElement;
-                              if (parent && !parent.querySelector(".flag-emoji")) {
-                                const emoji = document.createElement("span");
-                                emoji.className = "flag-emoji text-lg";
-                                emoji.textContent = oppositeLang.flag;
-                                parent.appendChild(emoji);
-                              }
-                            }}
-                          />
-                        </div>
-                        <span className="text-primary-foreground/80 font-medium">
-                          {t("common.language", "Language")}: {oppositeLang.name}
-                        </span>
-                      </>
-                    );
-                  })()}
+                  <>
+                    <div className="w-7 h-5 overflow-hidden flex-shrink-0 rounded-[2px]">
+                      <oppositeLang.FlagIcon
+                        title={oppositeLang.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-primary-foreground/80 font-medium">
+                      {t("common.language", "Language")}: {oppositeLang.name}
+                    </span>
+                  </>
                 </button>
               </div>
 

@@ -131,6 +131,8 @@ Language preference is saved in localStorage and persists across sessions.
 
 ```sh
 npm run build
+
+npx prisma generate
 ```
 
 This creates an optimized production build in the `.next/` folder.

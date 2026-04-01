@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { headers } from "next/headers";
 import { Providers } from "./providers";
 import { StructuredData } from "./components/StructuredData";
 import "@/index.css";
@@ -94,11 +95,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read the nonce injected by middleware so it can be forwarded to any
+  // explicit <Script nonce={nonce}> components added in the future.
+  // Next.js also reads x-nonce internally to stamp its own inline scripts.
+  const nonce = (await headers()).get("x-nonce") ?? "";
+
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
